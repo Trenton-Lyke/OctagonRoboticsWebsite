@@ -1,0 +1,163 @@
+/*Samuel Anozie, Eric Errampalli. Quarter Project. Due 12/9/18. This is the styles for the form page.*/
+@import url('https://fonts.googleapis.com/css?family=Raleway:200');
+@import url('https://fonts.googleapis.com/css?family=Cinzel+Decorative:400,700,900');
+body, html {
+	height: 100%;
+}
+body {
+	margin: auto;
+	text-align: center;
+}
+
+/*styles these headbars all nice*/
+#headbar {
+	height: 10%;
+}
+#headbar img {
+	height: 100%;
+}
+
+/*makes sure that the form starts off as invisible, so that the user isnt pressured to start with either option*/
+form {
+	font-family: 'Raleway', sans-serif;
+    font-size: 2.5vw;
+}
+div#sensitiveInfo {
+	background-color: #164869;
+	width: 100%;
+	padding-top: 3%;
+	padding-bottom: 3%;
+}
+/*styling allllllllll the inputs here*/
+select {
+    font-family: 'Raleway', sans-serif;
+    font-size: 2.3vw;
+}
+option {
+    font-size: 1.5vw;
+}
+option:hover {
+    background-color: #164869;
+    box-shadow: 0 0 10px 100px #164869 inset;
+    color: white;
+}
+input {
+	text-align: center;
+}
+input[type = 'submit'] {
+	height: 100px;
+	width: 20%;
+	background-color: #164869;
+	color: white;
+	border: none;
+	font-family: 'Raleway', sans-serif;
+	font-size: 1.3vw;
+	margin: 2%;
+}
+input[type = 'submit']:hover {
+	color: #164869;
+	background-color: white;
+	border: 1px solid #164869;
+	-webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+}
+input[type = 'text'], input[type = 'password'] {
+	border: none;
+	border-bottom: 1px solid #164869;
+	margin-bottom: 1.5%;
+	margin-top: 1.5%;
+	width: 17%;
+    font-size: 2vw;
+	font-family: 'Raleway', sans-serif;
+	color: #164869;
+}
+input[type = 'text']:focus, input[type = 'password']:focus {
+	width: 20%;
+	-webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+}
+input.names {
+	width: 13%;
+}
+
+#sensitiveInfo input {
+	background: none;
+	color: white;
+	border-bottom: 1px solid white;
+}
+#sensitiveInfo ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: ghostwhite;
+  opacity: 1; /* Firefox */
+}
+
+#sensitiveInfo :-ms-input-placeholder { /* Internet Explorer 10-11 */
+  color: ghostwhite;
+}
+
+#sensitiveInfo ::-ms-input-placeholder { /* Microsoft Edge */
+  color: ghostwhite;
+}
+#sensitiveInfo p {
+	color: whitesmoke;
+}
+
+
+/*making sure that the text always looks clean*/
+h1 {
+	color: #164869;
+	font-size: 7vw;
+	font-weight: 700;
+	opacity: 1.0;
+	font-family: 'Cinzel Decorative', serif;
+	animation-name: list;
+	animation-duration: 3s;
+	-webkit-animation-name: list; /* Safari/Chrome */
+	-webkit-animation-duration: 3s; /* Safari/Chrome */
+	margin-top: 6rem;
+}
+p {
+	font-family: 'Raleway', sans-serif;
+	color: #164869;
+	margin-top: 1%;
+	font-size: 1.6vw;
+	font-weight: 600;
+}
+
+
+
+/*this segment of code is from w3 schools. This helps validate the  password so that it has the requirements nessisary to make it a safe password.*/
+#message {
+    display:none;
+    background: #f1f1f1;
+    color: #000;
+    position: relative;
+    padding: 20px;
+    margin-top: 10px;
+}
+
+#message p {
+    padding: 10px 35px;
+    font-size: 18px;
+}
+
+/* Add a green text color and a checkmark when the requirements are right */
+.valid {
+    color: green;
+}
+
+.valid:before {
+    position: relative;
+    left: -35px;
+    content: "✔";
+}
+
+/* Add a red text color and an "x" when the requirements are wrong */
+.invalid {
+    color: red;
+}
+
+.invalid:before {
+    position: relative;
+    left: -35px;
+    content: "✖";
+}

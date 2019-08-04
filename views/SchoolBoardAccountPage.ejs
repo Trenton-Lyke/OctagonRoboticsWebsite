@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html id = "account">
+<head>
+<!--Samuel Anozie, June 2, 2017. This is the account page. We still need to figure out how to actually create accounts. Also an idea: have a Pick your Classes page so that users can edit the classes, figure out a way to ade/subtract divs,  prob with javascript-->
+<meta charset = "UTF-8"/>
+<link rel = "stylesheet" href = "styles.css"/>
+<link rel = "icon" href = "favicon.jpg" type = "image/jpg"/>
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<script src="universal_functions.js"></script>
+<title>SchoolBoard</title>
+<style>
+@import url('https://fonts.googleapis.com/css?family=Pontano+Sans');
+html {
+	height: 100%;
+}
+body {
+	text-align: center;
+	height: 100%;
+	background-image: url('backpic.jpg');
+	background-size: cover;
+	overflow: auto;
+}
+@keyframes list {
+	from {opacity: 0.0;}
+	to {opacity: 1.0;}
+}
+@-webkit-keyframes list {
+	from {opacity: 0.0;}
+	to {opacity: 1.0;}
+}
+ @keyframes image {
+	0% {width: 75%; height: 21%; margin-top: 20%;}
+	100% {width: 25%; height:7%; margin-top: 0%;}
+}
+@-webkit-keyframes image {
+	0% {width: 75%; height: 21%; margin-top: 20%;}
+	100% {width: 25%; height:7%; margin-top: 0%;}
+}
+</style>
+<script>
+function logout() {
+	var response = confirm("Are you sure you want to log out?");
+	if (response == true) {
+		$.ajax({
+			url: "/logout",
+			type: 'POST',
+			success: function(){
+				window.location = "/";
+			},
+			error: function(){
+				alert('Sorry, there was a problem logging you out. Please try again. If this problem continues, please contact your SchoolBoard administrator.');
+			}
+		});
+	   
+	} else {
+		alert('Okay, we will keep you logged in.');
+	}
+}
+</script>
+</head>
+<body id = "account">
+<div class = "img">
+	<a href = "index.html">
+		<img src = "Picture2.png"/>
+	</a>
+</div>
+<div class = "body">
+	<div class = "greeting">
+		<h3>Welcome 
+		<%=user_data.first_name%>,</h3>
+	</div>
+<div class = "profile">
+	<div class = "heading">
+		<h1>Profile</h1>
+	</div>
+	<div class = "statement">
+		<p>This is where you can check the questions asked in your classes</p>
+	</div>
+</div>
+<div id = "classes" class = "tabcontent">
+	<div class = "classLabel">
+		<h2>Classes</h2>
+	</div>
+	<div id = "myCarousel" class = "carousel slide" data-ride = "carousel">
+	  <!-- Indicators -->
+	  <ol class = "carousel-indicators">
+		<%var i = 0;
+		class_documents.forEach(function(document){%>
+			<%if(i==0){%>
+			<li data-target = '#myCarousel' class='active' data-slide-to='<%=i%>'></li>
+			<%}else{%>
+			<li data-target = '#myCarousel' data-slide-to='<%=i%>' ></li>
+			<%}%>
+		<%i++;})%>
+		
+	  </ol>
+
+	  <!-- Wrapper for slides -->
+	  <div class = "carousel-inner">
+		
+	<%var i = 0;
+		class_documents.forEach(function(document){%>
+			<%if(document.id==null){%>
+			<div class="item active">
+			<div class = 'envelope'><div id = 'box' class = 'NetandWall'><div class = 'name'><h4><%=document.class_name%></h4></div><div class = 'launch'></div></div></div>
+			</div>
+			<%}else if(i==0){%>
+			<div class="item active">
+			<div class = 'envelope'><div id = 'box' class = 'NetandWall'><div class = 'name'><h4><%=document.class_name%></h4></div><div class = 'launch'><h5><a href = '/classPage?id=<%=document.id%>'>Launch</a></h5></div></div></div>
+			</div>
+			
+			<%}else{%>
+			<div class="item">
+			<div class = 'envelope'><div id = 'box' class = 'NetandWall'><div class = 'name'><h4><%=document.class_name%></h4></div><div class = 'launch'><h5><a href = '/classPage?id=<%=document.id%>'>Launch</a></h5></div></div></div>
+			</div>
+			<%}%>
+		<%i++;})%>
+	
+	</div>
+	
+
+	  <!-- Left and right controls -->
+	  <a class = "left carousel-control" href = "#myCarousel" data-slide = "prev">
+	    <span class = "glyphicon glyphicon-chevron-left"></span>
+	    <span class = "sr-only">Previous</span>
+	  </a>
+	  <a class="right carousel-control" href="#myCarousel" data-slide="next">
+	    <span class = "glyphicon glyphicon-chevron-right"></span>
+	    <span class = "sr-only">Next</span>
+	  </a>
+	</div>
+	</div>
+	<!-- <div id = "box" class = "BC1">
+		<h4>BC I</h4>
+	</div>
+	<div id = "box" class = "AdChemII">
+		<h4>Advanced Chemistry II</h4>
+	</div>
+	<div id = "box" class = "Biophysics">
+		<h4>Biophysics</h4>
+	</div>
+	<div id = "box" class = "20th">
+		<h4>20th Century</h4>
+	</div>
+	<div id = "box" class = "ModernWorldFiction">
+		<h4>Modern World Fiction</h4>
+	</div>
+	<div id = "box" class = "MandarinII">
+		<h4>Mandarin II</h4>
+	</div>
+	<div id = "box" class = "NetandWall">
+		<h4>Net and Wall Games</h4>
+	</div> -->
+</div>
+<div class = "quote">
+	<img class = "openQuote" src = "OpenQuote.png"/>
+	<div class = "envelope2">
+		<div class = "quote1">
+			<p>We get wise by asking questions, and even if these are not answered, we get wise, for a well-packed question carries its answer on its back as a snail carries its shell.</p>
+			<p class = "description">- James Stephens, novelist</p>
+		</div>
+	</div>
+	<img class = "closeQuote" src = "ClosingQuote.png"/>
+</div>
+<!--eventual displayal of bookmarked/asked questions-->
+<!--
+<div id = "questions" class = "tabcontent">
+	<div class = "classLabel">
+		<h2>Questions</h2>
+	</div>
+	<div id = "myCarousel" class = "carousel slide" data-ride = "carousel">
+	  <ol class = "carousel-indicators">
+	    <li data-target = "#myCarousel" data-slide-to="0" class="active"></li>
+	    <li data-target = "#myCarousel" data-slide-to="1"></li>
+	    <li data-target = "#myCarousel" data-slide-to="2"></li>
+		<li data-target = "#myCarousel" data-slide-to="3"></li>
+		<li data-target = "#myCarousel" data-slide-to="4"></li>
+		<li data-target = "#myCarousel" data-slide-to="5"></li>
+		<li data-target = "#myCarousel" data-slide-to="6"></li>
+	  </ol>
+
+	  <div class = "carousel-inner">
+	    <div class = "item active">
+			<div class = "envelope">
+	      	<div id = "box">
+				<div class = "name">
+					<h4>No Questions</h4>
+				</div>
+				<div class = "launch">
+					<h5>Check</h5>
+				</div>
+			</div>
+			</div>
+	    </div>
+
+	    <div class = "item">
+			<div class = "envelope">
+	      	<div id = "box">
+				<div class = "name">
+					<h4>No Questions</h4>
+				</div>
+				<div class = "launch">
+					<h5>Check</h5>
+				</div>
+			</div>
+			</div>
+	    </div>
+
+	    <div class = "item">
+			<div class = "envelope">
+	      	<div id = "box">
+				<div class = "name">
+					<h4>No Questions</h4>
+				</div>
+				<div class = "launch">
+					<h5>Check</h5>
+				</div>
+			</div>
+			</div>
+	    </div>
+
+		<div class = "item">
+			<div class = "envelope">
+	      	<div id = "box">
+				<div class = "name">
+					<h4>No Questions</h4>
+				</div>
+				<div class = "launch">
+					<h5>Check</h5>
+				</div>
+			</div>
+			</div>
+	    </div>
+
+		<div class = "item">
+			<div class = "envelope">
+	      	<div id = "box">
+				<div class = "name">
+					<h4>No Questions</h4>
+				</div>
+				<div class = "launch">
+					<h5>Check</h5>
+				</div>
+			</div>
+			</div>
+	    </div>
+
+		<div class = "item">
+			<div class = "envelope">
+	      	<div id = "box">
+				<div class = "name">
+					<h4>No Questions</h4>
+				</div>
+				<div class = "launch">
+					<h5>Check</h5>
+				</div>
+			</div>
+			</div>
+	    </div>
+
+		<div class = "item">
+			<div class = "envelope">
+	      	<div id = "box">
+				<div class = "name">
+					<h4>No Questions</h4>
+				</div>
+				<div class = "launch">
+					<h5>Check</h5>
+				</div>
+				</div>
+			</div>
+	    </div>
+
+	  <a class = "left carousel-control" href = "#myCarousel" data-slide = "prev">
+	    <span class = "glyphicon glyphicon-chevron-left"></span>
+	    <span class = "sr-only">Previous</span>
+	  </a>
+	  <a class="right carousel-control" href="#myCarousel" data-slide="next">
+	    <span class = "glyphicon glyphicon-chevron-right"></span>
+	    <span class = "sr-only">Next</span>
+	  </a>
+</div>
+</div>
+</div>
+-->
+<div class = "logout">
+	<input id = "logout" type = "button" value = "LOGOUT" onclick = "logout()">
+</div>
+</div>
+</body>
+<script>
+<%if(err){%> alert('<%=err%>')
+<%}%>
+</script>
+</html>

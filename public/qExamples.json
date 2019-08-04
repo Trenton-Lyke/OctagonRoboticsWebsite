@@ -1,0 +1,117 @@
+[
+	{
+		"tags": "#TaylorSeries #MaclaurenSeries",
+		"question": "What's the difference between Taylor Series and Maclauren Series?",
+		"cardType": "card-primary"
+	},
+	{
+		"tags": "#Vocab #Grammar",
+		"question": "Schreib 6 Satze mit den Verben von der Tabelle?",
+		"cardType": "card-secondary"
+	},
+	{
+		"tags": "#ShutterSpeed",
+		"question": "Why does my picture turn out very dark when I increase the shutter speed?",
+		"cardType": "card-tertiary"
+	},
+	{
+		"tags": "#Final",
+		"question": "How much is the final worth?",
+		"cardType": "card-quaternary"
+	},
+	{
+		"tags": "#ChemEqu",
+		"question": "What's the difference between a normal equation and an empirical equation?",
+		"cardType": "card-quinary"
+	},
+	{
+		"tags": "#Immunology",
+		"question": "Which gets activated first, T-Cells or B-Cells?",
+		"cardType": "card-primary"
+	},
+	{
+		"tags": "#ModernGeometry #Constructions",
+		"question": "Can all points constructible with compass and straightedge be constructed only with a compass?",
+		"cardType": "card-secondary"
+	},
+	{
+		"tags": "#NodeJS #Modules #Express",
+		"question": "What's the difference between router.get and app.get with expressJS?",
+		"cardType": "card-tertiary"
+	},
+	{
+		"tags": "#GraphicNovels #Time",
+		"question": "Are gutters the only way to display time within comics?",
+		"cardType": "card-quaternary"
+	},
+	{
+		"tags": "#Programming",
+		"question": "What's the difference between a dictionary and a library?",
+		"cardType": "card-quinary"
+	},
+	{
+		"tags": "#InternationalRelations",
+		"question": "What marked the end of the US's unilateral policy?",
+		"cardType": "card-primary"
+	},
+	{
+		"tags": "#Test",
+		"question": "What topics are going to be covered by the test?",
+		"cardType": "card-secondary"
+	},
+	{
+		"tags": "#中文",
+		"question": "如果你可以度我些什么，你怎么知道中文?",
+		"cardType": "card-tertiary"
+	},
+	{
+		"tags": "#gramática",
+		"question": "¿Qué es la diferencia entre por y para y cuando usamos?",
+		"cardType": "card-quaternary"
+	},
+	{
+		"tags": "#Externalities",
+		"question": "Is there no way to account for externalities within a supply-demand model?",
+		"cardType": "card-quinary"
+	},
+	{
+		"tags": "#StudentLoans",
+		"question": "What company manages my student debt?",
+		"cardType": "card-primary"
+	},
+	{
+		"tags": "#MVP",
+		"question": "What are the steps to creating an MVP?",
+		"cardType": "card-secondary"
+	},
+	{
+		"tags": "#Startups",
+		"question": "What are some of the leading causes of startup failure?",
+		"cardType": "card-tertiary"
+	},
+	{
+		"tags": "#GDP",
+		"question": "Is GDP a accurate measure of a country's economic growth?",
+		"cardType": "card-quaternary"
+	},
+	{
+		"tags": "#Stocks #Bonds",
+		"question": "What's the difference between stocks and bonds?",
+		"cardType": "card-quaternary"
+	},
+	{
+		"tags": "#Polar",
+		"question": "Why do we take the integral of the square root when finding the polar arc length?",
+		"cardType": "card-quinary"
+	},
+	{
+		"tags": "#Resonance #Lewis Structure",
+		"question": "How can you determine resonance from a Lewis Structure?",
+		"cardType": "card-primary"
+	},
+	{
+		"tags": "#Grammer #Time",
+		"question": "你怎么用“才”？才的意思是不是late?",
+		"cardType": "card-secondary"
+	}
+]
