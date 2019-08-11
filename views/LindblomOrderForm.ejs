@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<!--Trenton Lyke, August 8, 2019. -->
+<html id = "index">
+<head>
+<meta charset = "UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Bootstrap Links -->
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+
+<!--My Stuff-->
+<link rel = "stylesheet" href = "styles.css"/>
+
+
+<title>SchoolBoard</title>
+<link rel = "icon" href = "favicon.png" type = "image/jpg"/>
+</head>
+<body>
+<nav class="navbar navbar-expand-md bg-dark navbar-dark">
+  
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="collapsibleNavbar">
+    <ul class="navbar-nav ma">
+      <li class="nav-item">
+      <a class="nav-link" href="#">Home</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#">3D Printing Vendor</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#">Lindblom Machining</a>
+    </li>
+  
+	<li class="nav-item">
+      <a class="nav-link" href="#">Robotics Forum</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/signup">Sign Up</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/login">Login</a>
+    </li>    
+    </ul>
+  </div>  
+</nav>
+
+
+<div class = "container-fluid mainBack">
+	<div class="container text-center">
+	<form method="POST" action="/submitOrder" enctype="multipart/form-data">
+	<div class="form-inline ma text-center">
+
+		<input type="text" class="form-control" name="name" placeholder="Name" required>
+
+	<input type="email" name="email" class="form-control" required>
+	<input type="tel" name="phone_number" class="form-control" required>
+	<div>
+	<input type="number" name="team_number" required>
+	<select name="delivery_type" id="delivery_type" onchange="showHideAddress()" required>
+  <option value="pickup">Pickup at Lindblom</option>
+  <option value="mail">Mail</option>
+  <option value="delivery">Personal Delivery</option>
+</select>
+	<input type="text" class="address" name="street_address" required>
+	<input type="text" class="address" name="city" required>
+	<select name="state" class="address" required>
+	<option value="AL">Alabama (AL)</option>
+	<option value="AK">Alaska (AK)</option>
+	<option value="AZ">Arizona (AZ)</option>
+	<option value="AR">Arkansas (AR)</option>
+	<option value="CA">California (CA)</option>
+	<option value="CO">Colorado (CO)</option>
+	<option value="CT">Connecticut (CT)</option>
+	<option value="DE">Delaware (DE)</option>
+	<option value="DC">District Of Columbia (DC)</option>
+	<option value="FL">Florida (FL)</option>
+	<option value="GA">Georgia (GA)</option>
+	<option value="HI">Hawaii (HI)</option>
+	<option value="ID">Idaho (ID)</option>
+	<option value="IL">Illinois (IL)</option>
+	<option value="IN">Indiana (IN)</option>
+	<option value="IA">Iowa (IA)</option>
+	<option value="KS">Kansas (KS)</option>
+	<option value="KY">Kentucky (KY)</option>
+	<option value="LA">Louisiana (LA)</option>
+	<option value="ME">Maine (ME)</option>
+	<option value="MD">Maryland (MD)</option>
+	<option value="MA">Massachusetts (MA)</option>
+	<option value="MI">Michigan (MI)</option>
+	<option value="MN">Minnesota (MN)</option>
+	<option value="MS">Mississippi (MS)</option>
+	<option value="MO">Missouri (MO)</option>
+	<option value="MT">Montana (MT)</option>
+	<option value="NE">Nebraska (NE)</option>
+	<option value="NV">Nevada (NV)</option>
+	<option value="NH">New Hampshire (NH)</option>
+	<option value="NJ">New Jersey (NJ)</option>
+	<option value="NM">New Mexico (NM)</option>
+	<option value="NY">New York (NY)</option>
+	<option value="NC">North Carolina (NC)</option>
+	<option value="ND">North Dakota (ND)</option>
+	<option value="OH">Ohio (OH)</option>
+	<option value="OK">Oklahoma (OK)</option>
+	<option value="OR">Oregon (OR)</option>
+	<option value="PA">Pennsylvania (PA)</option>
+	<option value="RI">Rhode Island (RI)</option>
+	<option value="SC">South Carolina (SC)</option>
+	<option value="SD">South Dakota (SD)</option>
+	<option value="TN">Tennessee (TN)</option>
+	<option value="TX">Texas (TX)</option>
+	<option value="UT">Utah (UT)</option>
+	<option value="VT">Vermont</option>
+	<option value="VA">Virginia</option>
+	<option value="WA">Washington</option>
+	<option value="WV">West Virginia</option>
+	<option value="WI">Wisconsin</option>
+	<option value="WY">Wyoming</option>
+</select>
+<input type="text" class="address" name="zip_code" required>		<input type="file" name="file" required>
+	<textarea name="message"></textarea>
+	<input type="submit">
+	</form>
+	</div>
+</div>
+</body>
+<script>
+$(showHideAddress())
+	function showHideAddress(){
+	
+		if($("#delivery_type").val() == "pickup"){
+			$(".address").hide();
+			$(".address").prop('required',false);
+		}
+		else{
+			$(".address").show();
+			$(".address").prop('required',true);
+		}
+	}
+</script>
+</html>

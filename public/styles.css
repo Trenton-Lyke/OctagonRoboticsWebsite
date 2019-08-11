@@ -16,7 +16,8 @@
 .mainBack{
 	background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("mainBack.jpg");
 	
-	width: 100vw
+	width: 100vw;
+	height: 100vh
 }
 
 .card-primary .card-header {
@@ -183,17 +184,22 @@
 }
 #index h1 {
   color: white;
-  font-size: 7rem;
+  font-size: 7vw;
   font-family: "Cinzel Decorative", serif;
   font-weight: 700;
-  /*background: linear-gradient(to right bottom, #164869, #2b5e7e, #3f7593, #548da8, #6aa5bd);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;*/
+  
 }
 #index h2 {
   font-size: 6rem;
   font-family: "Raleway", sans-serif;
   font-weight: 700;
+}
+#index h3 {
+  color: white;
+  font-size: 5.2vw;
+  font-family: "Cinzel Decorative", serif;
+  font-weight: 700;
+  
 }
 #index span.gradient {
   background: linear-gradient(to right bottom, #000080, #0000e6, #4d4dff, #9999ff, #ccccff);
@@ -221,6 +227,7 @@
 .ma{
 	margin: auto
 }
+
 hr {
 	margin: auto;
 	margin-top: 7vh;
@@ -234,7 +241,7 @@ width: 80vw;
 .description{
 	
 	color: white;
-	font-size: 20pt;
+	font-size: 17pt;
 	font-family: sans-serif
 }
 .smt{
@@ -244,15 +251,16 @@ width: 80vw;
 	margin-top: 10vh
 }
 .mt20{
-	margin-top: 20vh
+	margin-top: 15vh
 }
 .pageDisplay{
 	background-color: black;
-	min-height: 110vh
+	min-height: 110vh;
+	padding-bottom: 5vh;
+	
 }
-.navbar{
-	font-size: 2vw;
-}
+
+
 #newform {
   /*styling allllllllll the inputs here*/
   /*making sure that the text always looks clean*/
@@ -1172,6 +1180,7 @@ width: 80vw;
 
 /* Make it so that when the  user clicks on the section they want to see, the go button appears. */
 .nav {
+	
   background-color: #164869;
 }
 
@@ -1179,12 +1188,12 @@ width: 80vw;
 	background-color: black
 }
 .navbar, .fixed-top, .navbar-expand-sm ,.navbar-dark,.navbar-nav,.nav-item{
-	font-size: 3vw
-	background-color: black
+	font-size: 2vw;
+	font-family: "Cinzel Decorative", serif;
 }
 .nav-item{
-margin-left: 1.25vw;
-	margin-right: 1.25vw;
+margin-left: .2vw;
+	margin-right: .2vw;
 }
 #grand-parent {
   height: 100vh;

@@ -26,8 +26,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 var transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: 'tagstea@gmail.com',
-    pass: 'tag713!!'
+    user: 'LindblomOrders@gmail.com',
+    pass: 'Qazwsxedc123!'
   }
 });
 
@@ -42,8 +42,11 @@ app.set('view engine', 'ejs');
 
 const trencryption = require('./JS/trencryption.js');
 const firebase = require('firebase');
-const admin = require('firebase-admin')
-const serviceAccount = require('./ServiceAccountKey.json')
+const admin = require('firebase-admin');
+const {Storage} = require('@google-cloud/storage');
+const request = require('request');
+const Multer = require('multer');
+const serviceAccount = require('./ServiceAccountKey.json');
 require("firebase/app")
 require("firebase/auth")
 require("firebase/database")
@@ -54,13 +57,34 @@ require("firebase/functions")
 
 admin.initializeApp({
 	credential: admin.credential.cert(serviceAccount),
-	databaseURL: "https://my-awsome-project-cedd0.firebaseio.com"
+	databaseURL: "https://my-awsome-project-cedd0.firebaseio.com",
+	storageBucket: "gs://octagonroboticsdatabase.appspot.com"
 })
+
+const multer = Multer({
+  storage: Multer.MemoryStorage,
+  limits: {
+    fileSize: 1000 * 1024 * 1024 // no larger than 5mb
+  }
+});
+
+
+const storage = new Storage({
+  projectId: "octagonroboticsdatabase",
+  keyFilename: "./ServiceAccountKey.json"
+});
+
+var bucket = storage.bucket("octagonroboticsdatabase.appspot.com");
+
+
 
 
 const db = admin.firestore();
 
 const Users = db.collection('Users');
+const Orders = db.collection('Orders');
+
+
 
 //the server is listening on port 3000 for connections
 app.listen(3000, function () {
@@ -82,6 +106,86 @@ app.get('/login', function(req, res){
 	res.render("login")
 	
 });
+
+app.get('/LindblomOrderForm', function(req, res){
+	
+	res.render("LindblomOrderForm")
+	
+});
+
+
+app.post('/submitOrder', multer.single("file"), function(req, res){
+	var user_id = 'Guest';
+	if(req.signedCookies.user_id){
+		user_id = req.signedCookies.user_id
+	}
+	var email = req.body.email;
+	var phone_number = req.body.phone_number;
+	var team_number = req.body.team_number;
+	var message = req.body.message;
+	var order_date = new Date();
+	console.log(order_date)
+	var order_status = "requested";
+	var delivery_type = req.body.delivery_type;
+	
+	
+	var file = req.file;
+	uploadFile(file).then(function (file_url){
+		if(delivery_type != "pickup"){
+			var address = ""+req.body.street_address+", "+req.body.city+", "+req.body.state+", "+req.body.zip_code;
+			insertOrderWithAddress(user_id, email, phone_number, team_number, file_url, message, order_date, order_status, delivery_type, address, function (id){
+		console.log(id)
+		emailOrderWithAddress(email, phone_number, team_number, file_url, message, order_date, delivery_type, address, id, function(responseInfo){
+			res.render('LindblomOrderForm')
+		})
+		
+	})
+		}
+		else{
+			insertOrderWithoutAddress(user_id, email, phone_number, team_number, file_url, message, order_date, order_status, delivery_type, function(id){
+				console.log(id)
+				emailOrderWithoutAddress(email, phone_number, team_number, file_url, message, order_date, delivery_type, id, function(responseInfo){
+			res.render('LindblomOrderForm')
+		})
+			})
+			
+		}
+	})
+	
+	
+});
+
+function uploadFile(file){
+	return new Promise((resolve, reject) => {
+		if (!file) {
+      reject('No image file');
+    }
+    let newFileName = `${file.originalname}_${Date.now()}`;
+
+    let blob = bucket.file(newFileName);
+	
+  const blobStream = blob.createWriteStream({
+    metadata: {
+      contentType: file.mimetype
+    }
+  });
+  blobStream.on("error", err => {
+	  reject(err)
+	  
+  });
+  blobStream.on("finish", () => {
+	  
+	  blob.getSignedUrl({
+  action: 'read',
+  expires: '03-09-2491'
+}).then(signedUrls => {
+	resolve(signedUrls[0]);
+});
+      
+  });
+  blobStream.end(file.buffer);
+	});
+}
 
 app.post('/login', function(req, res){
 	var username = test_input(req.body.username);
@@ -155,6 +259,39 @@ function insertUser(username, aPassword, first_name, last_name, email, team_numb
 		email: email,
 		team_number: team_number,
 		team_name: team_name
+	}).then(ref => {
+  callback(ref.id);
+});
+}
+
+function insertOrderWithAddress(user_id, email, phone_number, team_number, file_url, message, order_date, order_status, delivery_type, address, callback){
+	Orders.add({
+		user_id: user_id,
+		email: email,
+		phone_number: phone_number,
+		team_number: team_number,
+		file_url: file_url, 
+		message: message,
+		order_date: order_date,
+		order_status: order_status,
+		delivery_type: delivery_type,
+		address: address
+	}).then(ref => {
+  callback(ref.id);
+});
+}
+
+function insertOrderWithoutAddress(user_id, email, phone_number, team_number, file_url, message, order_date, order_status, delivery_type, callback){
+	Orders.add({
+		user_id: user_id,
+		email: email,
+		phone_number: phone_number,
+		team_number: team_number,
+		file_url: file_url, 
+		message: message,
+		order_date: order_date,
+		order_status: order_status,
+		delivery_type: delivery_type
 	}).then(ref => {
   callback(ref.id);
 });
@@ -285,4 +422,36 @@ function getUserInfo(res, req, callback){
 	else {		
 		callback(null)		
 	}
+}
+
+function emailOrderWithAddress(email, phone_number, team_number, file_url, message, order_date, delivery_type, address, id, callback){
+	var mailOptions = {
+  from: 'LindblomOrders@gmail.com',
+  to: 'LindblomOrderReciever@gmail.com',
+  subject: 'New Order '+id,
+  html: "<h1>Order Information</h1><h3>Client Email:</h3><h5>"+email+"</h5><h3>Client Phone Number:</h3><h5>"+phone_number+"</h5><h3>Client Team Number:</h3><h5>"+team_number+"</h5><h3>File Submitted by Client:</h3><h5><a href="+file_url+">Click here to download</a></h5><h3>Message from Client:</h3><h5>"+message+"</h5><h3>Order Date:</h3><h5>"+order_date+"</h5><h3>Method of Delivery:</h3><h5>"+delivery_type+"</h5><h3>Delivery Address:</h3><h5>"+address+"</h5>"
+};
+transporter.sendMail(mailOptions, function(error, info){
+  if (error) {
+    callback(error)
+  } else {
+    callback(info);
+  }
+});
+}
+
+function emailOrderWithoutAddress(email, phone_number, team_number, file_url, message, order_date, delivery_type, id, callback){
+	var mailOptions = {
+  from: 'LindblomOrders@gmail.com',
+  to: 'LindblomOrderReciever@gmail.com',
+  subject: 'New Order '+id,
+  html: "<h1>Order Information</h1><h3>Client Email:</h3><h5>"+email+"</h5><h3>Client Phone Number:</h3><h5>"+phone_number+"</h5><h3>Client Team Number:</h3><h5>"+team_number+"</h5><h3>File Submitted by Client:</h3><h5><a href="+file_url+">Click here to download</a></h5><h3>Message from Client:</h3><h5>"+message+"</h5><h3>Order Date:</h3><h5>"+order_date+"</h5><h3>Method of Delivery:</h3><h5>"+delivery_type+"</h5>"
+};
+transporter.sendMail(mailOptions, function(error, info){
+  if (error) {
+    callback(error)
+  } else {
+    callback(info);
+  }
+});
 }
