@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<!--Trenton Lyke, August 8, 2019. -->
+<html id = "ForumMenu">
+<head>
+<meta charset = "UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Bootstrap Links -->
+
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js" ></script>
+<link href="https://raw.githack.com/ttskch/select2-bootstrap4-theme/master/dist/select2-bootstrap4.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/css/select2.min.css" rel="stylesheet" />
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js"></script>
+
+
+
+<!--My Stuff-->
+<link rel = "stylesheet" href = "styles.css"/>
+
+
+<title>SchoolBoard</title>
+<link rel = "icon" href = "favicon.png" type = "image/jpg"/>
+</head>
+<body>
+<nav class="navbar navbar-expand-md bg-dark navbar-dark">
+  
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="collapsibleNavbar">
+    <ul class="navbar-nav ma">
+      <li class="nav-item">
+      <a class="nav-link" href="/">Home</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link active" href="/3DPrinterOrderForm">3D Printing Vendor</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/LindblomOrderForm">Lindblom Machining</a>
+    </li>
+  
+	<li class="nav-item">
+      <a class="nav-link" href="#">Robotics Forum</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/signup">Sign Up</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/login">Login</a>
+    </li>    
+    </ul>
+  </div>  
+</nav>
+
+
+<div class = "container-fluid mainBack">
+	<h1 id="fadeIn1">Robotics Forum Menu</h1>
+</div>
+<div class="container text-center forumContainer" >
+<h2 class="forumMenuHeader">Forum Menu</h2>
+	
+	<div class="row text-center">
+		<div class="col-md-12 ma text-center">
+			
+		
+	
+	
+	<div id="tabs">
+  <ul class="menuHeader">
+    <li><a href="#topics" id="topicHeader" >Topics</a></li>
+    <li><a href="#categories" id="categoriesHeader">Categories</a></li>
+    
+  </ul>
+  <div id="topics">
+	
+	
+    
+  </div>
+  <div id="categories">
+  <%categories.forEach(function(category){%>
+	
+  
+	<div class="card mb1" >
+  <div class="card-body" >
+  <div class="row">
+  <div class="col-md-8 text-left">
+    <a href="/Forum_Category?id=<%=category.id%>"><h2 class="card-title categoryTitle" ><%=category.name%> </h2></a> 
+    <h4 class="card-text"><%=category.description%></h4>
+    
+  </div>
+  <div class="col-md-4 text-right">
+	<br>
+    <h3 class="card-title " ><i class="fa fa-pencil-square-o" aria-hidden="true" title="Topics"></i><%=category.topic_count%> <i class="fa fa-comments-o" aria-hidden="true" title="Posts"></i><%=category.post_count%></h3>
+    <h6>Moderator: <%=category.moderator_name%></h6>
+    
+  </div>
+
+  </div>
+  </div>
+  </div>
+ <%})	%>
+   
+  </div>
+
+</div>
+</div>
+	</div>
+</body>
+<script>
+
+
+// Add the following code if you want the name of the file appear on select
+$(".custom-file-input").on("change", function() {
+  var fileName = $(this).val().split("\\").pop();
+  $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+});
+
+$($(document).ready(function() {
+    $('.select2').select2({
+		theme: 'bootstrap4',
+	});
+}));
+
+function myFunc(){
+alert('This may take a while. ')
+}
+$( function() {
+    $( "#tabs" ).tabs();
+  } );
+  
+  
+</script>
+
+</html>

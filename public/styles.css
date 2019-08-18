@@ -5,20 +5,35 @@
 @import url("https://fonts.googleapis.com/css?family=Cinzel+Decorative:400,700,900");
 @import url("https://fonts.googleapis.com/css?family=Syncopate");
 .card {
-  position: absolute;
-  z-index: -1;
-  max-width: 300px;
-  min-width: 20px;
-  opacity: 0;
+
+  
+  opacity: 1;
   border: none;
 }
+.card-menu{
+	background-color: #007FFF;
+	color: white;
+}
 
-.mainBack{
+
+#index .mainBack{
 	background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("mainBack.jpg");
-	
+	background-repeat: no-repeat;
+  background-attachment: fixed;
 	width: 100vw;
 	height: 100vh
 }
+
+#thankyou .mainBack{
+	background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("thankYouBack.jpg");
+	background-repeat: no-repeat;
+  background-attachment: fixed;
+	width: 100vw;
+	height: 100vh
+}
+
+
+
 
 .card-primary .card-header {
   background-color: #164869;
@@ -189,6 +204,72 @@
   font-weight: 700;
   
 }
+.thankyoutitle{
+	margin-top: 15vh;
+}
+#thankyou h1 {
+
+  color: white;
+  font-size: 7vw;
+  font-family: "Cinzel Decorative", serif;
+  font-weight: 700;
+  
+}
+
+#ThreeDPrinterOrderForm h1 {
+
+  color: white;
+  font-size: 7vw;
+  font-family: "Cinzel Decorative", serif;
+  font-weight: 700;
+  
+}
+#LindblomOrderForm h1 {
+  color: white;
+  font-size: 7vw;
+  font-family: "Cinzel Decorative", serif;
+  font-weight: 700;
+  
+}
+#ForumMenu h1 {
+  color: white;
+  font-size: 7vw;
+  font-family: "Cinzel Decorative", serif;
+  font-weight: 700;
+  
+}
+.select2{
+	background-color: white;
+}
+#LindblomOrderForm h2 {
+  color: black;
+  font-size: 5vw;
+  font-family: "Cinzel Decorative", serif;
+  font-weight: 600;
+  
+}
+.forumMenuHeader {
+  color: black;
+  font-size: 5vw;
+  font-family: "Cinzel Decorative", serif;
+  font-weight: 600;
+  
+}
+.mb1{
+	margin-bottom: 1vh
+}
+.categoryTitle{
+	color: #2C588D;
+  font-size: 5vmin;
+  font-weight: bold;
+}
+#ThreeDPrinterOrderForm h2 {
+  color: black;
+  font-size: 5vw;
+  font-family: "Cinzel Decorative", serif;
+  font-weight: 600;
+  
+}
 #index h2 {
   font-size: 6rem;
   font-family: "Raleway", sans-serif;
@@ -224,6 +305,86 @@
   will-change: background;
   transition: background 1s;
 }
+#LindblomOrderForm body{
+	background-color: #E9ECEF
+}
+
+#ThreeDPrinterOrderForm body{
+	background-color: #E9ECEF
+}
+#tabs, .menuHeader{
+	background-color: #E4E9F1
+}
+#thankyou body{
+	background-color: #E9ECEF
+}
+
+#ForumMenu body{
+	background-color: #E9ECEF
+}
+
+#LindblomOrderForm .row {
+	padding-top: 5vh;
+	padding-bottom: 5vh;
+}
+
+#ThreeDPrinterOrderForm .row {
+	padding-top: 5vh;
+	padding-bottom: 5vh;
+}
+
+#ForumMenu .row {
+	padding-top: 5vh;
+	padding-bottom: 5vh;
+}
+
+#LindblomOrderForm .mainBack {
+	background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("machineShopBack.jpg");
+	
+	background-repeat: no-repeat;
+  background-attachment: fixed;
+	height: 100vh;
+	width: 100vw;
+	padding-top: 7vh;
+	padding-bottom: 7vh;
+}
+
+#ForumMenu .mainBack {
+	background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("forumBack.jpg");
+	
+	background-repeat: no-repeat;
+  background-attachment: fixed;
+	height: 100vh;
+	width: 100vw;
+	padding-top: 7vh;
+	padding-bottom: 7vh;
+}
+
+#ThreeDPrinterOrderForm .mainBack {
+	background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("3DPrinterBack.jpg");
+	
+	background-repeat: no-repeat;
+  background-attachment: fixed;
+	height: 100vh;
+	width: 100vw;
+	padding-top: 7vh;
+	padding-bottom: 7vh;
+}
+
+.inputTitle{
+	text-align: left; font-weight: bold
+}
+
+#LindblomOrderForm .orderForm {
+	padding-top: 7vh;
+}
+#ThreeDPrinterOrderForm .orderForm {
+	padding-top: 7vh;
+}
+.forumContainer {
+	padding-top: 7vh;
+}
+
 .ma{
 	margin: auto
 }
@@ -1195,6 +1356,8 @@ width: 80vw;
 margin-left: .2vw;
 	margin-right: .2vw;
 }
+
+
 #grand-parent {
   height: 100vh;
   overflow: hidden;
@@ -1206,7 +1369,7 @@ margin-left: .2vw;
 
 #fadeIn1 {
     margin-top: 25px;
-    font-size: 21px;
+    
     text-align: center;
 	
     -webkit-animation: fadein 7s; /* Safari, Chrome and Opera > 12.1 */
@@ -1220,7 +1383,7 @@ margin-left: .2vw;
 
 #fadeIn2 {
     margin-top: 25px;
-    font-size: 21px;
+    
     text-align: center;
 	opacity: 0;
     -webkit-animation: fadein 7s; /* Safari, Chrome and Opera > 12.1 */

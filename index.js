@@ -22,12 +22,13 @@ var bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
-
+var toEmailLindblom = 'LindblomOrderReciever@gmail.com';
+var toEmail3DPrinter = '3DPrinterRequestReciever@gmail.com'
 var transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: 'LindblomOrders@gmail.com',
-    pass: 'Qazwsxedc123!'
+    user: 'OctagonRoboticsRequester@gmail.com',
+    pass: 'Tfcrdxesz123!'
   }
 });
 
@@ -82,16 +83,15 @@ var bucket = storage.bucket("octagonroboticsdatabase.appspot.com");
 const db = admin.firestore();
 
 const Users = db.collection('Users');
-const Orders = db.collection('Orders');
+const Lindblom_Orders = db.collection('Lindblom_Orders');
+const ThreeDPrinter_Orders = db.collection('ThreeDPrinter_Orders');
+const Forum_Categories = db.collection('Forum_Categories');
 
 
 
 //the server is listening on port 3000 for connections
 app.listen(3000, function () {
 	console.log("Listening at port 3000")
-	j=test_input("Crazy 8's")
-	console.log(j)
-	console.log(revert_input(j))
 });
 
 
@@ -107,14 +107,60 @@ app.get('/login', function(req, res){
 	
 });
 
+app.get('/thankyou', function(req, res){
+	
+	res.render("thankyou")
+	
+});
+
 app.get('/LindblomOrderForm', function(req, res){
 	
 	res.render("LindblomOrderForm")
 	
 });
 
+app.get('/3DPrinterOrderForm', function(req, res){
+	
+	res.render("3DPrinterOrderForm")
+	
+});
 
-app.post('/submitOrder', multer.single("file"), function(req, res){
+app.get('/ForumMenu', function(req, res){
+	
+	
+	Forum_Categories.get().then(
+	function(categoryDocs){
+		
+		var moderator_id_list = []
+		var categoryDocDataList = []
+		categoryDocs.forEach(function(categoryDoc){
+			moderator_id_list.push(categoryDoc.data().moderator_id)
+			var docData = categoryDoc.data();
+			docData.id = categoryDoc.id;
+			categoryDocDataList.push(docData)
+		})
+		var emptyDocumentsList = []
+		
+		getDocumentsByID(Users, moderator_id_list, emptyDocumentsList, function(documents){
+			categoryDocDataList.forEach(function(categoryDocData){
+				documents.forEach(function(doc){
+					console.log(doc.id)
+					if(categoryDocData.moderator_id == doc.id){
+						categoryDocData.moderator_name = doc.first_name + " " + doc.last_name 
+					}
+				})
+			})
+			res.render("ForumMenu",{categories: categoryDocDataList})
+			
+			
+		})
+	}
+	)
+	
+});
+
+
+app.post('/submitLindblomOrder', multer.array("files"), function(req, res){
 	var user_id = 'Guest';
 	if(req.signedCookies.user_id){
 		user_id = req.signedCookies.user_id
@@ -122,34 +168,83 @@ app.post('/submitOrder', multer.single("file"), function(req, res){
 	var email = req.body.email;
 	var phone_number = req.body.phone_number;
 	var team_number = req.body.team_number;
+	var material = req.body.material;
+	var finish = req.body.finish;
 	var message = req.body.message;
 	var order_date = new Date();
-	console.log(order_date)
 	var order_status = "requested";
 	var delivery_type = req.body.delivery_type;
 	
 	
-	var file = req.file;
-	uploadFile(file).then(function (file_url){
-		if(delivery_type != "pickup"){
-			var address = ""+req.body.street_address+", "+req.body.city+", "+req.body.state+", "+req.body.zip_code;
-			insertOrderWithAddress(user_id, email, phone_number, team_number, file_url, message, order_date, order_status, delivery_type, address, function (id){
-		console.log(id)
-		emailOrderWithAddress(email, phone_number, team_number, file_url, message, order_date, delivery_type, address, id, function(responseInfo){
-			res.render('LindblomOrderForm')
-		})
-		
+	var design_file = req.files[0];
+	var additional_file = req.files[1];
+	console.log(design_file)
+	uploadFile(design_file).then(function (design_file_url){
+		uploadFile(additional_file).then(function (additional_file_url){
+			if(delivery_type != "pickup"){
+				var address = ""+req.body.street_address+", "+req.body.city+", "+req.body.state+", "+req.body.zip_code;
+				insertOrderWithAddress(Lindblom_Orders, user_id, email, phone_number, team_number, design_file_url, additional_file_url, message, material, finish, order_date, order_status, delivery_type, address, function (id){
+					console.log(id)
+					emailOrderWithAddress(toEmailLindblom, email, phone_number, team_number, design_file_url, additional_file_url, message, material, finish, order_date, delivery_type, address, id, function(responseInfo){
+						res.redirect("/thankyou")
+					})
+				})
+			}
+			else{
+				insertOrderWithoutAddress(Lindblom_Orders, user_id, email, phone_number, team_number, design_file_url, additional_file_url, message, material, finish, order_date, order_status, delivery_type, function(id){
+					console.log(id)
+					emailOrderWithoutAddress(toEmailLindblom, email, phone_number, team_number, design_file_url, additional_file_url, message, material, finish, order_date, delivery_type, id, function(responseInfo){
+						res.redirect("/thankyou")
+					})
+				})
+				
+			}
+		})	
 	})
-		}
-		else{
-			insertOrderWithoutAddress(user_id, email, phone_number, team_number, file_url, message, order_date, order_status, delivery_type, function(id){
-				console.log(id)
-				emailOrderWithoutAddress(email, phone_number, team_number, file_url, message, order_date, delivery_type, id, function(responseInfo){
-			res.render('LindblomOrderForm')
-		})
-			})
-			
-		}
+	
+	
+});
+
+app.post('/submit3DPrinterOrder', multer.array("files"), function(req, res){
+	var user_id = 'Guest';
+	if(req.signedCookies.user_id){
+		user_id = req.signedCookies.user_id
+	}
+	var email = req.body.email;
+	var phone_number = req.body.phone_number;
+	var team_number = req.body.team_number;
+	var material = req.body.material;
+	var finish = req.body.finish;
+	var message = req.body.message;
+	var order_date = new Date();
+	var order_status = "requested";
+	var delivery_type = req.body.delivery_type;
+	
+	
+	var design_file = req.files[0];
+	var additional_file = req.files[1];
+	console.log(design_file)
+	uploadFile(design_file).then(function (design_file_url){
+		uploadFile(additional_file).then(function (additional_file_url){
+			if(delivery_type != "pickup"){
+				var address = ""+req.body.street_address+", "+req.body.city+", "+req.body.state+", "+req.body.zip_code;
+				insertOrderWithAddress(ThreeDPrinter_Orders, user_id, email, phone_number, team_number, design_file_url, additional_file_url, message, material, finish, order_date, order_status, delivery_type, address, function (id){
+					console.log(id)
+					emailOrderWithAddress(toEmail3DPrinter, email, phone_number, team_number, design_file_url, additional_file_url, message, material, finish, order_date, delivery_type, address, id, function(responseInfo){
+						res.redirect("/thankyou")
+					})
+				})
+			}
+			else{
+				insertOrderWithoutAddress(ThreeDPrinter_Orders, user_id, email, phone_number, team_number, design_file_url, additional_file_url, message, material, finish, order_date, order_status, delivery_type, function(id){
+					console.log(id)
+					emailOrderWithoutAddress(toEmail3DPrinter, email, phone_number, team_number, design_file_url, additional_file_url, message, material, finish, order_date, delivery_type, id, function(responseInfo){
+						res.redirect("/thankyou")
+					})
+				})
+				
+			}
+		})	
 	})
 	
 	
@@ -264,14 +359,18 @@ function insertUser(username, aPassword, first_name, last_name, email, team_numb
 });
 }
 
-function insertOrderWithAddress(user_id, email, phone_number, team_number, file_url, message, order_date, order_status, delivery_type, address, callback){
-	Orders.add({
+function insertOrderWithAddress(collection, user_id, email, phone_number, team_number, design_file_url, additional_file_url, message, material, finish, order_date, order_status, delivery_type, address, callback){
+	
+	collection.add({
 		user_id: user_id,
 		email: email,
 		phone_number: phone_number,
 		team_number: team_number,
-		file_url: file_url, 
+		design_file_url: design_file_url, 
+		additional_file_url: additional_file_url,
 		message: message,
+		material: material,
+		finish: finish,
 		order_date: order_date,
 		order_status: order_status,
 		delivery_type: delivery_type,
@@ -281,14 +380,17 @@ function insertOrderWithAddress(user_id, email, phone_number, team_number, file_
 });
 }
 
-function insertOrderWithoutAddress(user_id, email, phone_number, team_number, file_url, message, order_date, order_status, delivery_type, callback){
-	Orders.add({
+function insertOrderWithoutAddress(collection, user_id, email, phone_number, team_number, design_file_url, additional_file_url, message, material, finish, order_date, order_status, delivery_type, callback){
+	collection.add({
 		user_id: user_id,
 		email: email,
 		phone_number: phone_number,
 		team_number: team_number,
-		file_url: file_url, 
+		design_file_url: design_file_url, 
+		additional_file_url: additional_file_url,
 		message: message,
+		material: material,
+		finish: finish,
 		order_date: order_date,
 		order_status: order_status,
 		delivery_type: delivery_type
@@ -424,12 +526,12 @@ function getUserInfo(res, req, callback){
 	}
 }
 
-function emailOrderWithAddress(email, phone_number, team_number, file_url, message, order_date, delivery_type, address, id, callback){
+function emailOrderWithAddress(toEmail, email, phone_number, team_number, design_file_url, additional_file_url, message, material, finish, order_date, delivery_type, address, id, callback){
 	var mailOptions = {
-  from: 'LindblomOrders@gmail.com',
-  to: 'LindblomOrderReciever@gmail.com',
+  from: 'OctagonRoboticsRequester@gmail.com',
+  to: toEmail,
   subject: 'New Order '+id,
-  html: "<h1>Order Information</h1><h3>Client Email:</h3><h5>"+email+"</h5><h3>Client Phone Number:</h3><h5>"+phone_number+"</h5><h3>Client Team Number:</h3><h5>"+team_number+"</h5><h3>File Submitted by Client:</h3><h5><a href="+file_url+">Click here to download</a></h5><h3>Message from Client:</h3><h5>"+message+"</h5><h3>Order Date:</h3><h5>"+order_date+"</h5><h3>Method of Delivery:</h3><h5>"+delivery_type+"</h5><h3>Delivery Address:</h3><h5>"+address+"</h5>"
+  html: "<h1>Order Information</h1><h3>Client Email:</h3><h5>"+email+"</h5><h3>Client Phone Number:</h3><h5>"+phone_number+"</h5><h3>Client Team Number:</h3><h5>"+team_number+"</h5><h3>Design File Submitted by Client:</h3><h5><a href="+design_file_url+">Click here to download</a></h5><h3>Additional File Submitted by Client:</h3><h5><a href="+additional_file_url+">Click here to download</a></h5><h3>Message from Client:</h3><h5>"+message+"</h5><h3>Material:</h3><h5>"+material+"</h5><h3>Finish:</h3><h5>"+finish+"</h5><h3>Order Date:</h3><h5>"+order_date+"</h5><h3>Method of Delivery:</h3><h5>"+delivery_type+"</h5><h3>Delivery Address:</h3><h5>"+address+"</h5>"
 };
 transporter.sendMail(mailOptions, function(error, info){
   if (error) {
@@ -440,12 +542,12 @@ transporter.sendMail(mailOptions, function(error, info){
 });
 }
 
-function emailOrderWithoutAddress(email, phone_number, team_number, file_url, message, order_date, delivery_type, id, callback){
+function emailOrderWithoutAddress(toEmail, email, phone_number, team_number, design_file_url, additional_file_url, message, material, finish, order_date, delivery_type, id, callback){
 	var mailOptions = {
-  from: 'LindblomOrders@gmail.com',
-  to: 'LindblomOrderReciever@gmail.com',
+  from: 'OctagonRoboticsRequester@gmail.com',
+  to: toEmail,
   subject: 'New Order '+id,
-  html: "<h1>Order Information</h1><h3>Client Email:</h3><h5>"+email+"</h5><h3>Client Phone Number:</h3><h5>"+phone_number+"</h5><h3>Client Team Number:</h3><h5>"+team_number+"</h5><h3>File Submitted by Client:</h3><h5><a href="+file_url+">Click here to download</a></h5><h3>Message from Client:</h3><h5>"+message+"</h5><h3>Order Date:</h3><h5>"+order_date+"</h5><h3>Method of Delivery:</h3><h5>"+delivery_type+"</h5>"
+  html: "<h1>Order Information</h1><h3>Client Email:</h3><h5>"+email+"</h5><h3>Client Phone Number:</h3><h5>"+phone_number+"</h5><h3>Client Team Number:</h3><h5>"+team_number+"</h5><h3>Design File Submitted by Client:</h3><h5><a href="+design_file_url+">Click here to download</a></h5><h3>Additional File Submitted by Client:</h3><h5><a href="+additional_file_url+">Click here to download</a></h5><h3>Message from Client:</h3><h5>"+message+"</h5><h3>Material:</h3><h5>"+material+"</h5><h3>Finish:</h3><h5>"+finish+"</h5><h3>Order Date:</h3><h5>"+order_date+"</h5><h3>Method of Delivery:</h3><h5>"+delivery_type+"</h5>"
 };
 transporter.sendMail(mailOptions, function(error, info){
   if (error) {
@@ -454,4 +556,45 @@ transporter.sendMail(mailOptions, function(error, info){
     callback(info);
   }
 });
+}
+function getDocumentsByFeature(collection, feature_title, features, documents, callback){
+	if(features.length > 0){
+		
+		collection.where(feature_title,'==',features[0]).get().then(function(resultsOfQuery){
+			if(resultsOfQuery.size > 0){
+			resultsOfQuery.forEach(function(doc){
+				console.log('documents')
+				console.log(doc.data())
+				
+					var docData = doc.data()
+					
+					documents.push(docData)
+				
+			})
+			}
+			features.shift()
+			return getDocumentsByFeature(collection, feature_title, features, documents, callback)
+		})
+	}
+	else{
+		callback(documents);
+	}
+}
+function getDocumentsByID(collection, ids, documents, callback){
+	if(ids.length > 0){
+		collection.doc(ids[0]).get().then(doc => {
+			var docData = doc.data()
+			if(docData){
+			
+			console.log(docData)
+			docData.id = ids[0];
+			documents.push(docData)
+		}
+			ids.shift()
+			return getDocumentsByID(collection, ids, documents, callback)
+		})
+	}
+	else{
+		callback(documents);
+	}
 }

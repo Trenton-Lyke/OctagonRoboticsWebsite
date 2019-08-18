@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<!--Trenton Lyke, August 8, 2019. -->
+<html id = "thankyou">
+<head>
+<meta charset = "UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Bootstrap Links -->
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+
+<!--My Stuff-->
+<link rel = "stylesheet" href = "styles.css"/>
+
+
+<title>SchoolBoard</title>
+<link rel = "icon" href = "favicon.png" type = "image/jpg"/>
+</head>
+<body>
+<nav class="navbar navbar-expand-md bg-dark navbar-dark">
+  
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="collapsibleNavbar">
+    <ul class="navbar-nav ma">
+      <li class="nav-item">
+      <a class="nav-link" href="/">Home</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/3DPrinterOrderForm">3D Printing Vendor</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/LindblomOrderForm">Lindblom Machining</a>
+    </li>
+  
+	<li class="nav-item">
+      <a class="nav-link" href="#">Robotics Forum</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/signup">Sign Up</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/login">Login</a>
+    </li>    
+    </ul>
+  </div>  
+</nav>
+
+<div id = "grand-parent">
+<div id = "header" class = "container-fluid mainBack">
+	<div id = "headerRow" class = "row justify-content-center">
+		<div id = "headerCol" class = "col-md-12 thankyoutitle text-center">
+			<div class = "row text-center justify-content-center">
+				<h1 id="fadeIn1">Thank You For</h1>
+			</div>
+			
+			
+				<h1 id="fadeIn1">Your Request</h1>
+			</div>
+			
+			<div class = "row text-center justify-content-center" style="width:37vw; color: white">
+			<h2 id="fadeIn2" class="ma text-center">You'll be emailed a response to your request with a quote  for the project and further information. </h2>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+
+<div id = "footer" class = "container-fluid  d-flex flex-column bg-dark">
+	<div class = "col-md-3">
+		<img class = "logo img-fluid mx-auto d-block" src = "OctagonRoboticsLogo.png" alt = "header"/>
+	</div>
+</div>
+</body>
+<script>
+
+$(setTimeout(function() {   //calls click event after a certain time
+   $("#fadeIn2").css({ opacity: 1 });
+}, 10000));
+</script>
+</html>

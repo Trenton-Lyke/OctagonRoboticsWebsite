@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<!--Trenton Lyke, August 8, 2019. -->
+<html id = "ThreeDPrinterOrderForm">
+<head>
+<meta charset = "UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Bootstrap Links -->
+
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<link href="https://raw.githack.com/ttskch/select2-bootstrap4-theme/master/dist/select2-bootstrap4.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/css/select2.min.css" rel="stylesheet" />
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js"></script>
+
+
+
+<!--My Stuff-->
+<link rel = "stylesheet" href = "styles.css"/>
+
+
+<title>SchoolBoard</title>
+<link rel = "icon" href = "favicon.png" type = "image/jpg"/>
+</head>
+<body>
+<nav class="navbar navbar-expand-md bg-dark navbar-dark">
+  
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="collapsibleNavbar">
+    <ul class="navbar-nav ma">
+      <li class="nav-item">
+      <a class="nav-link" href="/">Home</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link active" href="/3DPrinterOrderForm">3D Printing Vendor</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/LindblomOrderForm">Lindblom Machining</a>
+    </li>
+  
+	<li class="nav-item">
+      <a class="nav-link" href="#">Robotics Forum</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/signup">Sign Up</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/login">Login</a>
+    </li>    
+    </ul>
+  </div>  
+</nav>
+
+
+<div class = "container-fluid mainBack">
+	<h1 id="fadeIn1">3D Printing Vendor</h1>
+</div>
+<div class="container text-center orderForm" >
+<h2 >Request Form</h2>
+	<form method="POST" action="/submit3DPrinterOrder" onsubmit="myFunc()"enctype="multipart/form-data">
+	
+
+	<div class="row">
+	<div class="col-md-3 text-left">
+	<span class="inputTitle">Full Name</span>
+	<div class="input-group mb-3">
+    <div class="input-group-prepend">
+      <span class="input-group-text"><i class="fa fa-user-circle"></i></span>
+    </div>
+		<input type="text" class="form-control" name="name" placeholder="Full Name" required>
+	</div>
+	</div>
+	<div class="col-md-3 text-left">
+	<span class="inputTitle">Email</span>
+	<div class="input-group mb-3">	
+	<div class="input-group-prepend">
+      <span class="input-group-text"><i class="fa fa-envelope"></i></span>
+    </div>	
+		<input type="email" name="email" class="form-control" placeholder="Email" required>
+	</div>
+	</div>
+	<div class="col-md-3 text-left">
+	<span class="inputTitle">Phone Number</span>
+	<div class="input-group mb-3">
+	<div class="input-group-prepend">
+      <span class="input-group-text"><i class="fa fa-phone "></i></span>
+    </div>	
+	<input type="tel" name="phone_number" class="form-control" placeholder="Phone Number" required>
+	</div>
+	</div>
+	
+	<div class="col-md-3 text-left">
+	<span class="inputTitle">Team Number</span>
+	<div class="input-group mb-3">
+	<div class="input-group-prepend">
+      <span class="input-group-text"><i class="fa fa-hashtag" ></i></span>
+    </div>
+	<input type="number" class="form-control" placeholder="Team Number" name="team_number" required>
+	</div>
+	</div>
+	</div>
+	
+	<div class="row">
+	
+	<div class="col-md-4 text-left">
+	<span class="inputTitle">Delivery Method</span>
+	<div class="input-group mb-3">
+	<div class="input-group-prepend">
+      <span class="input-group-text"><i class="fa fa-truck" ></i></span>
+    </div>
+	<select name="delivery_type" class="form-control select2" id="delivery_type" onchange="showHideAddress()" required>
+  <option value="pickup">Pickup at Lindblom</option>
+  <option value="mail">Mail</option>
+  <option value="delivery">Personal Delivery</option>
+</select>
+</div>
+</div>
+<div class="col-md-4 text-left">
+	<span class="inputTitle">Material</span>
+	<div class="input-group mb-3">
+	<div class="input-group-prepend">
+      <span class="input-group-text">Material</span>
+    </div>
+<select name="material" class="form-control select2" id="material"  required>
+  <option value="steel">Steel</option>
+  <option value="aluminum">Aluminum</option>
+  <option value="delrin">Delrin</option>
+</select>
+</div>
+</div>
+<div class="col-md-4 text-left">
+	<span class="inputTitle">Finish</span>
+	<div class="input-group mb-3">
+	<div class="input-group-prepend">
+      <span class="input-group-text">Finish</span>
+    </div>
+<select name="finish" class="form-control select2" id="finish"  required>
+  <option value="As Machined">As Machined</option>
+  <option value="Powder Coat">Powder Coat</option>
+  <option value="Chemical Film">Chemical Film</option>
+</select>
+</div>
+</div>
+</div>
+
+<div class="row address">
+<div class="col-md-4 text-left">
+	<span class="inputTitle">Street Address</span>
+	<div class="input-group mb-3">
+	<div class="input-group-prepend">
+      <span class="input-group-text"><i class="fa fa-map-marker"></i></span>
+    </div>
+	<input type="text" class="address form-control" name="street_address" placeholder="Street Address" required>
+</div>	
+</div>
+<div class="col-md-3 text-left">
+<span class="inputTitle">City</span>
+	<div class="input-group mb-3">
+	<div class="input-group-prepend">
+      <span class="input-group-text"><i class="fa fa-location-arrow "></i></span>
+    </div>
+	<input type="text" class="address form-control" name="city" placeholder="City" required>
+	</div>
+	</div>
+	<div class="col-md-2 text-left">
+	<span class="inputTitle">State</span>
+	<div class="input-group mb-3">
+	<div class="input-group-prepend">
+	
+      <span class="input-group-text">State</i></span>
+    </div>
+	<select name="state" class="address form-control select2" required>
+	<option value="AL">AL</option>
+	<option value="AK">AK</option>
+	<option value="AR">AR</option>	
+	<option value="AZ">AZ</option>
+	<option value="CA">CA</option>
+	<option value="CO">CO</option>
+	<option value="CT">CT</option>
+	<option value="DC">DC</option>
+	<option value="DE">DE</option>
+	<option value="FL">FL</option>
+	<option value="GA">GA</option>
+	<option value="HI">HI</option>
+	<option value="IA">IA</option>	
+	<option value="ID">ID</option>
+	<option value="IL">IL</option>
+	<option value="IN">IN</option>
+	<option value="KS">KS</option>
+	<option value="KY">KY</option>
+	<option value="LA">LA</option>
+	<option value="MA">MA</option>
+	<option value="MD">MD</option>
+	<option value="ME">ME</option>
+	<option value="MI">MI</option>
+	<option value="MN">MN</option>
+	<option value="MO">MO</option>	
+	<option value="MS">MS</option>
+	<option value="MT">MT</option>
+	<option value="NC">NC</option>	
+	<option value="NE">NE</option>
+	<option value="NH">NH</option>
+	<option value="NJ">NJ</option>
+	<option value="NM">NM</option>			
+	<option value="NV">NV</option>
+	<option value="NY">NY</option>
+	<option value="ND">ND</option>
+	<option value="OH">OH</option>
+	<option value="OK">OK</option>
+	<option value="OR">OR</option>
+	<option value="PA">PA</option>
+	<option value="RI">RI</option>
+	<option value="SC">SC</option>
+	<option value="SD">SD</option>
+	<option value="TN">TN</option>
+	<option value="TX">TX</option>
+	<option value="UT">UT</option>
+	<option value="VT">VT</option>
+	<option value="VA">VA</option>
+	<option value="WA">WA</option>
+	<option value="WI">WI</option>	
+	<option value="WV">WV</option>
+	<option value="WY">WY</option>
+</select>
+</div>
+</div>
+<div class="col-md-3 text-left">
+	<span class="inputTitle">Zip Code</span>
+	<div class="input-group mb-3">
+	<div class="input-group-prepend">
+      <span class="input-group-text"><i class="fa fa-globe  "></i></span>
+    </div>
+<input type="text" class="address form-control" placeholder="Zip Code" name="zip_code" required>
+</div>
+</div>
+</div>
+
+<div class="row">
+<div class="col-md-6 text-left">
+	<span class="inputTitle">Design File</span>
+	<div class="input-group mb-3">
+<div class="custom-file">
+    <input type="file" class="custom-file-input" type="file" name="files" id="design_file" accept=".DFX,.DWG,.gcode,.STP,.STEP, .IGS, .IGES, .SLDPRT" required>
+    <label class="custom-file-label" for="design_file">Upload 3D or 2D Model</label>
+  </div>
+  </div>
+  </div>
+  <div class="col-md-6 text-left">
+  <span class="inputTitle">Additional File</span>
+	<div class="input-group mb-3">
+  <div class="custom-file">
+    <input type="file" class="custom-file-input" type="file" name="files" id="additional_file" accept=".pdf" required>
+    <label class="custom-file-label" for="additional_file">Upload PDF with Measurements and Specifications</label>
+  </div>
+  </div>
+  </div>
+		
+		
+</div>	
+<div class="row">
+	<div class="col-md-12 text-left">
+	<span class="inputTitle">Additional Comments/Directions</span>
+	<textarea name="message" class="form-control" required></textarea>
+	</div>
+	</div>
+	<div class="row">
+	<div class="col-md-9"></div>
+	<div class="col-md-1">
+	<input type="submit" class="btn btn-info">
+	</div>
+	
+	<div class="col-md-1">
+	<input type="reset" class="btn btn-secondary">
+	</div>
+	
+	</div>
+	</form>
+	</div>
+
+</body>
+<script>
+$(showHideAddress())
+	function showHideAddress(){
+	
+		if($("#delivery_type").val() == "pickup"){
+			$(".address").hide();
+			$(".address").prop('required',false);
+		}
+		else{
+			$(".address").show();
+			$(".address").prop('required',true);
+		}
+	}
+
+// Add the following code if you want the name of the file appear on select
+$(".custom-file-input").on("change", function() {
+  var fileName = $(this).val().split("\\").pop();
+  $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+});
+
+$($(document).ready(function() {
+    $('.select2').select2({
+		theme: 'bootstrap4',
+	});
+}));
+
+function myFunc(){
+alert('This may take a while. ')
+}
+
+</script>
+</html>
