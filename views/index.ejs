@@ -1,35 +1,17 @@
 <!DOCTYPE html>
 <!--Trenton Lyke, August 8, 2019. -->
-<html id = "ForumMenu">
+<html id = "index">
 <head>
 <meta charset = "UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <!-- Bootstrap Links -->
-
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-<link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.css">
-<link href="https://cdn.jsdelivr.net/npm/froala-editor@3.0.0-beta.1/css/froala_editor.pkgd.min.css" rel="stylesheet" type="text/css" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js" ></script>
- <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/froala-editor@3.0.0-beta.1/js/froala_editor.pkgd.min.js"></script>
-<link href="https://raw.githack.com/ttskch/select2-bootstrap4-theme/master/dist/select2-bootstrap4.min.css" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/css/select2.min.css" rel="stylesheet" />
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js"></script>
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.18/r-2.2.2/datatables.min.css"/>
- 
-<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.18/r-2.2.2/datatables.min.js"></script>
-
-
-
-
 
 
 <!--My Stuff-->
@@ -48,7 +30,7 @@
   <div class="collapse navbar-collapse" id="collapsibleNavbar">
     <ul class="navbar-nav ma">
       <li class="nav-item">
-      <a style="color: #949DA0; display: inline-block; padding:1vmin" href="/">Home</a>
+      <a style="color: white; display: inline-block; padding:1vmin" href="/">Home</a>
     </li>
     <li class="nav-item">
       <a style="color: #949DA0; display: inline-block; padding:1vmin " href="/3DPrinterOrderForm">3D Printing</a>
@@ -88,7 +70,7 @@
 			<%}%></h4>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
-        <form action="/loginForum?page=ForumTopic&id=<%=topic.id%>" id="loginForm" method="POST">
+        <form action="/login?page=index" id="loginForm" method="POST">
         <!-- Modal body -->
         <div class="modal-body">
           
@@ -301,116 +283,103 @@ $.ajax({url: "/validateSignup",type: "POST", data: {username: $("#username").val
 }
 </script>
 
-
-
-<div class="container text-center forumContainer" >
-<h2 class="forumTopicHeader"><%=topic.name%></h2>
-<h2 class="fs5"><%=topic.description%></h2>	
-	
-            
-					<%
-					var postCount = 0;
-					posts.forEach(function(post){%>
-					
-						<div class="row">
-							<div class="col-md-2"><img src="<%=post.profile_picture%>" class="forumPic img-thumbnail"></div>
-							
-							<div class="col-md-8">
-							<br>
-							<br>
-							<div class="talk-bubble tri-right left-top">
-						  <div class="talktext text-left">
-						  <br/>
-							<h4 class="forumUsername"><%=post.username%></h4>
-							<pre><%=post.post_date%></pre>
-							<div id="post<%=postCount%>"></div>
-							<%-post.content%>
-						  </div>
-						</div>
-						</div>
-						
-						</div>
-						
-						
-					 <%})	%>
-				
-            
-		
+<div id = "grand-parent">
+<div id = "header" class = "container-fluid mainBack">
+	<div id = "headerRow" class = "row justify-content-center">
+		<div id = "headerCol" class = "col-md-12 text-center">
+			<div class = "row text-center justify-content-center">
+				<h1 id="fadeIn1">Octagon Robotics</h1>
+			</div>
+			<div class = "row text-center justify-content-center ">
+				<h1 id="fadeIn2">Future FIRST</h1>
+			</div>
+		</div>
 	</div>
-	<form method="post"  action="/addPost?id=<%=id%>">
-	<div class="container">
-	<div class="row">
-	<div class="col-md-12 text-left">
-	<h3>Add something to the conversation</h3>
-	<textarea name="content" id="myEditor" required></textarea>
-	</div>
-	</div>
-	<div class="row row justify-content-end">
-	<div class="col-md-1">
-	<input type="submit" class="btn btn-info">
-	</div>
-	
-	<div class="col-md-1">
-	<input type="reset" class="btn btn-secondary">
-	</div>
-	
-	</div>
-	
-  
-</form>
-
-
-
-<script>
-  new FroalaEditor('#myEditor', {
-    // Set the file upload URL.
-    fileUploadURL: '/file_upload',
-	fileUploadParams: {
-        id: 'my_editor'
-      },
-	imageUploadURL: '/image_upload',
-      imageUploadParams: {
-        id: 'my_editor'
-      },
-	  videoUploadURL: '/video_upload',
-      videoUploadParams: {
-        id: 'my_editor'
-      }
-  })
-  
-  
-</script>
 </div>
-  </div>
-  <div id = "footer" class = "container-fluid  d-flex flex-column bg-dark">
+</div>
+<div id = "mission" class = "container">
+	<div class = "row text-center">
+		<div class = "col-md-12">
+			<h2><span class = "text-dark" style="font-size: 7vw">Our Mission: </span><br><span class = "gradient" style="font-size: 7vw">Support and Empower Teams of the First Tech Challenge</span></h2>
+			<p class = "text-dark" style="font-size: 3vw">By providing teams with resources and mediums of communication, we're developing a nurturing enviroment for rookie and veteran teams alike.</p>
+		</div>
+	</div>
+	<div class = "row justify-content-center">
+		<div id = "signup" class = "col-md-3 button">
+			<a href = "/signup"  class = "stretched-link btn btn-lg">SIGN UP</a>
+		</div>
+		<div id = "login" class = "col-md-3 button">
+			<a href = "/login" class = "stretched-link btn btn-lg">LOG IN</a>
+		</div>
+	</div>
+</div>
+<div class = "container-fluid pageDisplay" style="background-color: #000033">
+	<div id = "headerRow" class = "row justify-content-center">
+		<div id = "headerCol" class = "col-md-12 text-center">
+			<div class = "row text-center justify-content-center">
+				<h3 style="" class="mt10">3D Printing Vendor</h3>
+			</div>
+		</div>
+	</div>
+	<div class = "row">
+		<div class="col-md-5 text-center ma"><img class="img-thumbnail mt20 img-fluid" src="3DPrint.jpg"></div>
+		
+		<div class="col-md-6 text-left ma"><p class="description mt10">Request personalized 3D printed parts for you competition robots and side projects alike. This service connects you with our 3D printin vendor's prestigious team. Submit a request with your designs to the team and they will send a quote for the cost and time needed to print your idea. If you agree on pricing you can continue to work with their team and obtain beautifully printed parts.
+		
+</p></div>
+		<div class="col-md-1 text-center ma"></div>
+	</div>
+	
+	
+</div>
+
+<div class = "container-fluid pageDisplay" style="background-color: #00001a">
+	<div id = "headerRow" class = "row justify-content-center">
+		<div id = "headerCol" class = "col-md-12 text-center">
+			<div class = "row text-center justify-content-center">
+				<h3 style="" class="mt10">Lindblom Machine Shop</h3>
+			</div>
+		</div>
+	</div>
+	<div class = "row">
+		<div class="col-md-5 text-center ma"><img class="img-thumbnail mt20 img-fluid" src="machineShop.jpg"></div>
+		
+		<div class="col-md-6 text-left ma"><p class="description mt10">Request personalized machined parts for you competition robots and side projects alike. This service connects you with Lindblom's prestigious machining team. Submit a request with your designs to the machining team and they will send a quote for the cost and time need to machine your idea. If you agree on pricing you can continue to work with their team and obtain beautifully machined parts.
+
+</p></div>
+		<div class="col-md-1 text-center ma"></div>
+	</div>
+	
+</div>
+<div class = "container-fluid pageDisplay" style="background-color: #000000">
+	<div id = "headerRow" class = "row justify-content-center">
+		<div id = "headerCol" class = "col-md-12 text-center">
+			<div class = "row text-center justify-content-center">
+				<h3 style="" class="mt10 pageDisplayTitle">FIRST Tech Challenge Forums</h3>
+			</div>
+		</div>
+	</div>
+	<div class = "row">
+		<div class="col-md-5 text-center ma"><img class="img-thumbnail mt20 img-fluid" src="forum.jpg"></div>
+		
+		<div class="col-md-6 text-left ma"><p class="description mt10">
+		Communicate and collaborate with other FTC robotics teams through our forums. In addition to topics covering basic tips and concepts for the First Technology Chalenge, anyone can ask and answer questions diving deep into the complex or intricate stategies and components of the game. We hope that this forum will help build up rookie teams' foundations and advance veteran teams past their previous limitations.
+
+</p></div>
+		<div class="col-md-1 text-center ma"></div>
+	</div>
+</div>
+
+<div id = "footer" class = "container-fluid  d-flex flex-column bg-dark">
 	<div class = "col-md-3">
 		<img class = "logo img-fluid mx-auto d-block" src = "OctagonRoboticsLogo.png" alt = "header"/>
 	</div>
 </div>
 </body>
 <script>
-$(document).ready(function() {
-    $('#example').DataTable({
-		responsive: true
-	});
-} );
 
-
-
-$($(document).ready(function() {
-    $('.select2').select2({
-		theme: 'bootstrap4',
-	});
-}));
-
-function myFunc(){
-alert('This may take a while. ')
-}
-$( function() {
-    $( "#tabs" ).tabs();
-  } );
-  
-  
+$(setTimeout(function() {   //calls click event after a certain time
+   $("#fadeIn2").css({ opacity: 1 });
+}, 10000));
 </script>
-
 </html>

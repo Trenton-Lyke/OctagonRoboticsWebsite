@@ -248,6 +248,24 @@
   font-weight: 600;
   
 }
+.fs5{
+	font-size: 2vw
+}
+.navlink{
+	color: #949DA0; display: inline-block
+}
+.navColor{
+	color: #949DA0
+}
+
+.navColor:hover{
+	color: red
+}
+
+.invalid{
+	border: solid 1px red
+}
+
 .forumPic{
 	width: 20vmin;
 	height: 20vmin
@@ -467,8 +485,11 @@ width: 80vw;
 .description{
 	
 	color: white;
-	font-size: 17pt;
-	font-family: sans-serif
+	font-size: 2.3vw;
+	font-family: sans-serif;
+	text-align: left;
+	text-indent: 2em;
+	
 }
 .smt{
 	font-size: 30pt
@@ -483,6 +504,7 @@ width: 80vw;
 	background-color: black;
 	min-height: 110vh;
 	padding-bottom: 5vh;
+
 	
 }
 

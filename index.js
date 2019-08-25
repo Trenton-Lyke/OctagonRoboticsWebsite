@@ -125,8 +125,34 @@ app.listen(3000, function () {
 
 
 app.get('/', function(req, res){
+	getUserInfo(res, req, function(user_data){
+		var username = ""
+		if(user_data != null){
+			username = user_data.username
+		}
+		var uop = null;
+		
+		if(req.query && req.query.uop){
+			uop = req.query.uop
+		}
+	res.render("index" , {username: username, uop: uop})
+	})
 	
-	res.render("index")
+});
+
+app.get('/index', function(req, res){
+	getUserInfo(res, req, function(user_data){
+		var username = ""
+		if(user_data != null){
+			username = user_data.username
+		}
+		var uop = null;
+		
+		if(req.query && req.query.uop){
+			uop = req.query.uop
+		}
+	res.render("index" , {username: username, uop: uop})
+	})
 	
 });
 
@@ -137,8 +163,7 @@ app.post('/addPost', function(req, res){
 	if(req.signedCookies && req.signedCookies.user_id){
 		user_id = req.signedCookies.user_id
 	}
-	console.log("user IDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD")
-	console.log(user_id)
+	
 	if(req.query && req.query.id){
 		var topic_id = req.query.id;
 		var content = req.body.content;
@@ -151,67 +176,198 @@ app.post('/addPost', function(req, res){
 	
 });
 
-app.get('/login', function(req, res){
+app.post('/addTopicForumCategory', function(req, res){
+	var user_id = "Guest";
+	if(req.signedCookies && req.signedCookies.user_id){
+		user_id = req.signedCookies.user_id
+	}
 	
-	res.render("login")
+	if(req.query && req.query.id){
+		var name = req.body.name;
+		var category_id = req.query.id
+		var description = req.body.description;
+		insertForum_Topic(user_id, category_id, name, description, function(id){
+			res.redirect("/ForumCategory?id="+category_id)
+			
+		})
+	
+	}
+	
+});
+
+app.post('/addTopicForumMenu', function(req, res){
+	var user_id = "Guest";
+	if(req.signedCookies && req.signedCookies.user_id){
+		user_id = req.signedCookies.user_id
+	}
+	
+	
+		var name = req.body.name;
+		var category_id = req.body.category_id;
+		var description = req.body.description;
+		insertForum_Topic(user_id, category_id, name, description, function(id){
+			res.redirect("/ForumMenu")
+			
+		})
+	
+	
+});
+
+
+
+
+app.get('/login', function(req, res){
+	var uop = null;
+		
+	if(req.query && req.query.uop){
+		uop = req.query.uop
+	}
+	res.render("login", {uop: uop})
 	
 });
 
 app.get('/thankyou', function(req, res){
-	
-	res.render("thankyou")
+	getUserInfo(res, req, function(user_data){
+		var username = ""
+		if(user_data != null){
+			username = user_data.username
+		}
+		var uop = null;
+		
+		if(req.query && req.query.uop){
+			uop = req.query.uop
+		}
+	res.render("thankyou", {username: username, uop: uop})
+	})
 	
 });
 
 app.get('/LindblomOrderForm', function(req, res){
-	
-	res.render("LindblomOrderForm")
+	getUserInfo(res, req, function(user_data){
+		var username = ""
+		if(user_data != null){
+			username = user_data.username
+		}
+		
+		var uop = null;
+		
+		if(req.query && req.query.uop){
+			uop = req.query.uop
+		}
+		
+	res.render("LindblomOrderForm", {username: username, uop: uop})
+	})
 	
 });
 
 app.get('/3DPrinterOrderForm', function(req, res){
-	
-	res.render("3DPrinterOrderForm")
+	getUserInfo(res, req, function(user_data){
+		var username = ""
+		if(user_data != null){
+			username = user_data.username
+		}
+		var uop = null;
+		
+		if(req.query && req.query.uop){
+			uop = req.query.uop
+		}
+	res.render("3DPrinterOrderForm", {username: username, uop: uop})
+	})
 	
 });
 
 app.get('/ForumMenu', function(req, res){
-	
+	getUserInfo(res, req, function(user_data){
+		var username = ""
+		if(user_data != null){
+			username = user_data.username
+		}
 	getCategoryDocDataList(function(categoryDocDataList){
 		getAllTopicDocDataList(function(topicDocDataList){
-			res.render("ForumMenu",{categories: categoryDocDataList, topics: topicDocDataList})
+			var uop = null;
+		
+			if(req.query && req.query.uop){
+				uop = req.query.uop
+			}
+			res.render("ForumMenu",{categories: categoryDocDataList, topics: topicDocDataList, username: username, uop: uop})
 		})
 		
+	})
 	})
 	
 	
 });
 
 app.get('/ForumCategory', function(req, res){
-	
+	getUserInfo(res, req, function(user_data){
+		var username = ""
+		if(user_data != null){
+			username = user_data.username
+		}
 	if(req.query && req.query.id){
-	
+	Forum_Categories.doc(req.query.id).get().then(function(category){
 		getTopicByCategoryIdDocDataList(req.query.id, function(topicDocDataList){
-			res.render("ForumCategory",{topics: topicDocDataList})
+			var uop = null;
+		
+			if(req.query && req.query.uop){
+				uop = req.query.uop
+			}
+			res.render("ForumCategory",{topics: topicDocDataList, username: username,id: req.query.id, category: category.data(), uop: uop})
 		})
+	})
 	}
+	else{
+		res.rediect("/")
+	}
+	})
 	
 	
 });
 
 app.get('/ForumTopic', function(req, res){
 	
+	getUserInfo(res, req, function(user_data){
+		var username = ""
+		if(user_data != null){
+			username = user_data.username
+		}
 	if(req.query && req.query.id){
 		getPostByTopicIdDocDataList(req.query.id, function(postDocDataList){
 			
 			Forum_Topics.doc(req.query.id).get().then(function(topic){
-				res.render("ForumTopic",{posts: postDocDataList, id: req.query.id, topic: topic.data()})
+				var uop = null;
+		
+				if(req.query && req.query.uop){
+					uop = req.query.uop
+				}
+				var topic_data = topic.data()
+				
+				
+				topic_data.id = topic.id
+				
+				var new_view_count = topic_data.view_count + 1
+			var category_id = topic_data.category_id
+			Forum_Topics.doc(topic_data.id).update({
+				view_count: new_view_count
+			}).then(function(result){
+				res.render("ForumTopic",{posts: postDocDataList, id: req.query.id, topic: topic_data, username: username, uop: uop})
+			})
+			
+				
 			})
 		})
 	}
-	
+	else{
+		res.redirect('/')
+	}
+	})
 	
 });
+
+app.get('/logout', function(req, res){
+	res.clearCookie('user_id')
+	res.redirect('/')
+})
 
 
 // File POST handler.
@@ -301,6 +457,38 @@ app.post('/submitLindblomOrder', multer.array("files"), function(req, res){
 	
 	
 });
+
+app.post('/validateSignup', function(req, res){
+	username = req.body.username
+	aPassword = req.body.password
+	email = req.body.email
+	
+	validateSignup(username, aPassword, email, function(validity){
+		
+		console.log(validity)
+		res.send(validity)
+		
+	})
+	
+	
+})
+
+app.post('/validateLogin', function(req, res){
+	username = req.body.username
+	aPassword = req.body.password
+	
+	validateLogin(username, aPassword, function(validity){
+		
+		console.log(validity)
+		res.send(validity)
+		
+	})
+	
+	
+})
+
+
+
 
 app.post('/submit3DPrinterOrder', multer.array("files"), function(req, res){
 	var user_id = 'Guest';
@@ -400,12 +588,53 @@ app.post('/login', function(req, res){
 			res.redirect('/')
 		}
 		else{
-			res.redirect('/login')
+			console.log("hi")
+			if(req.query && req.query.page){
+				
+				res.redirect('/'+req.query.page+"?uop=n")
+			}
+			else{
+				res.redirect("/")
+			}
+		}
+	})
+});
+
+app.post('/loginForum', function(req, res){
+	var username = test_input(req.body.username);
+	var aPassword = test_input(req.body.password);
+	var query = Users.where("username", "==", username).where("password", "==", trencryption.constantEncrypt(aPassword));
+	query.get().then(function(resultsOfQuery){
+		if(resultsOfQuery.size > 0){
+			resultsOfQuery.forEach(function(doc){
+				console.log(doc.data())
+				res.cookie('user_id', doc.id, {
+					httpOnly: true,
+					signed: true
+					//add maxAge attribute in milliseconds if wanted
+				})
+				getUserInfo(res, req, function(user_data){
+				console.log(user_data)
+			})
+			})
+			//Redirect to your Dashboard Later
+			res.redirect('/')
+		}
+		else{
+			console.log("hi")
+			if(req.query && req.query.page && req.query.id){
+				
+				res.redirect('/'+req.query.page+"?id=" + req.query.id+"&uop=n")
+			}
+			else{
+				res.redirect("/")
+			}
 		}
 	})
 });
 
 app.get('/signup', function(req, res){
+	
 	var validity = {username: true, password: true, email: true}
 	res.render("signup", validity)
 	
@@ -441,9 +670,7 @@ app.post('/signup', picUpload, function(req, res){
 								})
 								
 							}
-							else{
-								res.render('signup', validity)
-							}
+							
 							
 						})
 					}
@@ -806,6 +1033,9 @@ function getAllTopicDocDataList(callback){
 		
 		getDocumentsByID(Users, user_id_list, emptyDocumentsList, function(documents){
 			topicDocDataList.forEach(function(topicDocData){
+				if(topicDocData.user_id == "Guest"){
+					topicDocData.username = "Guest"
+				}
 				console.log(new Date().getTime())
 				console.log(topicDocData.creation_date)
 				topicDocData.creation_date = "" + Math.round(((new Date()).getTime()-topicDocData.creation_date._seconds*1000)/(1000*60*60*24)) + "d"
@@ -841,7 +1071,9 @@ function getTopicByCategoryIdDocDataList(category_id, callback){
 		
 		getDocumentsByID(Users, user_id_list, emptyDocumentsList, function(documents){
 			topicDocDataList.forEach(function(topicDocData){
-				
+				if(topicDocData.user_id == "Guest"){
+					topicDocData.username = "Guest"
+				}
 				
 				topicDocData.creation_date = "" + Math.round(((new Date()).getTime()-topicDocData.creation_date._seconds*1000)/(1000*60*60*24)) + "d"
 				topicDocData.last_post_date = "" + Math.round(((new Date()).getTime()-topicDocData.last_post_date._seconds*1000)/(1000*60*60*24)) + "d"
@@ -860,7 +1092,34 @@ function getTopicByCategoryIdDocDataList(category_id, callback){
 	)
 }
 
-
+function validateSignup(username, aPassword, email, callback){
+	var validity = {username: false, password: false, email: false}
+	
+		var query = Users.where("username", "==", username);
+		checkIfExists(query,function(usernameExists){
+			validity.username = !usernameExists;
+			var query = Users.where("password", "==", trencryption.constantEncrypt(aPassword));
+			checkIfExists(query,function(passwordExists){
+				validity.password = !passwordExists;
+				var query = Users.where("email", "==", email);
+				checkIfExists(query,function(emailExists){
+					validity.email = !emailExists;
+					
+					callback(validity)
+				})
+			})
+			
+		})
+}
+function validateLogin(username, aPassword, callback){
+	var validity = false
+	
+		var query = Users.where("username", "==", username).where("password", "==", trencryption.constantEncrypt(aPassword));
+		checkIfExists(query,function(userExists){
+			validity = userExists;
+			callback(validity)
+		})
+}
 function getPostByTopicIdDocDataList(topic_id, callback){
 	Forum_Posts.where("topic_id", "==", topic_id).orderBy('post_date').get().then(
 	function(postDocs){
