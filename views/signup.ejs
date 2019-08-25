@@ -33,7 +33,7 @@
 			</div>
 		</div>
 	</div>
-	<form class = "text-center" method = "post" action = "/signup">
+	<form class = "text-center" method = "post" enctype="multipart/form-data" action = "/signup">
 		<div class = "container">
 			<div class = "row">
 				<div class = "col-md-12">
@@ -99,6 +99,10 @@
 	  <p id="number" class="invalid">A <b>number</b></p>
 	  <p id="length" class="invalid">Minimum <b>8 characters</b></p>
 	</div>
+	<div class="custom-file">
+    <input type="file" class="custom-file-input" type="file" name="profile_picture" id="design_file" accept=".jpg,.png,.gif,.jpeg,.svg" required>
+    <label class="custom-file-label" for="design_file">Profile Picture</label>
+  </div>
 	<div id = "submit" class = "submit"></div><br>
 </form>
 <script>

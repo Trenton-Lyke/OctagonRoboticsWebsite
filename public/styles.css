@@ -248,10 +248,20 @@
   font-weight: 600;
   
 }
+.forumPic{
+	width: 20vmin;
+	height: 20vmin
+}
 .forumMenuHeader {
   color: black;
   font-size: 5vw;
   font-family: "Cinzel Decorative", serif;
+  font-weight: 600;
+  
+}
+.forumTopicHeader {
+  color: black;
+  font-size: 5vw;
   font-weight: 600;
   
 }
@@ -262,6 +272,61 @@
 	color: #2C588D;
   font-size: 5vmin;
   font-weight: bold;
+}
+.topicTitle{
+	color: #2C588D;
+  font-size: 3vmin;
+  font-weight: bold;
+}
+
+.forumUsername{
+	color: #2C588D;
+  font-size: 3vmin;
+  font-weight: bold;
+}
+
+.ellipsis {
+  text-overflow: ellipsis;
+
+  /* Required for text-overflow to do anything */
+  white-space: nowrap;
+  overflow: hidden;
+}
+.talk-bubble {
+	
+  display: inline-block;
+  position: relative;
+	width: 60vw;
+	height: auto;
+	background-color: white;
+}
+.talktext {
+	padding: 5vmin
+}
+/* Right triangle placed top left flush. */
+.tri-right.border.left-top:before {
+	content: ' ';
+	position: absolute;
+	width: 0;
+	height: 0;
+  left: -40px;
+	right: auto;
+  top: -8px;
+	bottom: auto;
+	border: 32px solid;
+	border-color: #666 transparent transparent transparent;
+}
+.tri-right.left-top:after{
+	content: ' ';
+	position: absolute;
+	width: 0;
+	height: 0;
+  left: -20px;
+	right: auto;
+  top: 0px;
+	bottom: auto;
+	border: 22px solid;
+	border-color: white transparent transparent transparent;
 }
 #ThreeDPrinterOrderForm h2 {
   color: black;

@@ -21,6 +21,14 @@ var bodyParser = require("body-parser");
 //puts post data into javascript objects
 app.use(bodyParser.urlencoded({ extended: true }));
 
+var path = require('path');
+var fs = require('fs');
+
+
+
+var upload_file = require("./file_upload.js");
+var upload_image = require("./image_upload.js");
+var upload_video = require("./video_upload.js");
 
 var toEmailLindblom = 'LindblomOrderReciever@gmail.com';
 var toEmail3DPrinter = '3DPrinterRequestReciever@gmail.com'
@@ -32,9 +40,13 @@ var transporter = nodemailer.createTransport({
   }
 });
 
+
+app.use(express.static(__dirname + '/'));
+app.use('/bower_components',  express.static(path.join(__dirname, '../bower_components')));
 //static directories for html,image, and css files
 app.use(express.static(__dirname+'/views'));
 app.use(express.static(__dirname+'/public'));
+app.use(express.static(__dirname+'/uploads'));
 app.use(express.static(__dirname+'/images'));
 app.use(express.static(__dirname+'/JS'));
 
@@ -70,6 +82,20 @@ const multer = Multer({
 });
 
 
+
+const picStorage = Multer.diskStorage({
+	destination: "./uploads",
+	filename: function(req, file, callback){
+		callback(null, file.originalname + "-" + Date.now() + path.extname(file.originalname))
+	}
+});
+
+const picUpload = Multer({
+	storage: picStorage
+}).single('profile_picture')
+
+
+
 const storage = new Storage({
   projectId: "octagonroboticsdatabase",
   keyFilename: "./ServiceAccountKey.json"
@@ -86,18 +112,42 @@ const Users = db.collection('Users');
 const Lindblom_Orders = db.collection('Lindblom_Orders');
 const ThreeDPrinter_Orders = db.collection('ThreeDPrinter_Orders');
 const Forum_Categories = db.collection('Forum_Categories');
-
+const Forum_Topics = db.collection('Forum_Topics');
+const Forum_Posts = db.collection('Forum_Posts');
 
 
 //the server is listening on port 3000 for connections
 app.listen(3000, function () {
 	console.log("Listening at port 3000")
+	
+	
 });
 
 
 app.get('/', function(req, res){
 	
 	res.render("index")
+	
+});
+
+
+
+app.post('/addPost', function(req, res){
+	var user_id = "Guest";
+	if(req.signedCookies && req.signedCookies.user_id){
+		user_id = req.signedCookies.user_id
+	}
+	console.log("user IDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD")
+	console.log(user_id)
+	if(req.query && req.query.id){
+		var topic_id = req.query.id;
+		var content = req.body.content;
+		insertForum_Post(user_id, topic_id, content, function(id){
+			res.redirect("/ForumTopic?id="+topic_id)
+			
+		})
+	
+	}
 	
 });
 
@@ -127,38 +177,85 @@ app.get('/3DPrinterOrderForm', function(req, res){
 
 app.get('/ForumMenu', function(req, res){
 	
+	getCategoryDocDataList(function(categoryDocDataList){
+		getAllTopicDocDataList(function(topicDocDataList){
+			res.render("ForumMenu",{categories: categoryDocDataList, topics: topicDocDataList})
+		})
+		
+	})
 	
-	Forum_Categories.get().then(
-	function(categoryDocs){
-		
-		var moderator_id_list = []
-		var categoryDocDataList = []
-		categoryDocs.forEach(function(categoryDoc){
-			moderator_id_list.push(categoryDoc.data().moderator_id)
-			var docData = categoryDoc.data();
-			docData.id = categoryDoc.id;
-			categoryDocDataList.push(docData)
-		})
-		var emptyDocumentsList = []
-		
-		getDocumentsByID(Users, moderator_id_list, emptyDocumentsList, function(documents){
-			categoryDocDataList.forEach(function(categoryDocData){
-				documents.forEach(function(doc){
-					console.log(doc.id)
-					if(categoryDocData.moderator_id == doc.id){
-						categoryDocData.moderator_name = doc.first_name + " " + doc.last_name 
-					}
-				})
-			})
-			res.render("ForumMenu",{categories: categoryDocDataList})
-			
-			
-		})
-	}
-	)
 	
 });
 
+app.get('/ForumCategory', function(req, res){
+	
+	if(req.query && req.query.id){
+	
+		getTopicByCategoryIdDocDataList(req.query.id, function(topicDocDataList){
+			res.render("ForumCategory",{topics: topicDocDataList})
+		})
+	}
+	
+	
+});
+
+app.get('/ForumTopic', function(req, res){
+	
+	if(req.query && req.query.id){
+		getPostByTopicIdDocDataList(req.query.id, function(postDocDataList){
+			
+			Forum_Topics.doc(req.query.id).get().then(function(topic){
+				res.render("ForumTopic",{posts: postDocDataList, id: req.query.id, topic: topic.data()})
+			})
+		})
+	}
+	
+	
+});
+
+
+// File POST handler.
+app.post("/file_upload", function (req, res) {
+  upload_file(req, function(err, data) {
+
+    if (err) {
+      return res.status(404).end(JSON.stringify(err));
+    }
+
+    res.send(data);
+  });
+});
+
+// Image POST handler.
+app.post("/image_upload", function (req, res) {
+  upload_image(req, function(err, data) {
+
+    if (err) {
+      return res.status(404).end(JSON.stringify(err));
+    }
+
+    res.send(data);
+  });
+});
+
+// Video POST handler.
+app.post("/video_upload", function (req, res) {
+  upload_video(req, function(err, data) {
+
+    if (err) {
+      return res.status(404).end(JSON.stringify(err));
+    }
+
+    res.send(data);
+  });
+});
+
+
+// Create folder for uploading files.
+var filesDir = path.join(path.dirname(require.main.filename), "uploads");
+if (!fs.existsSync(filesDir)){
+  fs.mkdirSync(filesDir);
+}
 
 app.post('/submitLindblomOrder', multer.array("files"), function(req, res){
 	var user_id = 'Guest';
@@ -314,7 +411,7 @@ app.get('/signup', function(req, res){
 	
 });
 
-app.post('/signup', function(req, res){
+app.post('/signup', picUpload, function(req, res){
 	var username = test_input(req.body.username);
 	var aPassword = test_input(req.body.password);
 	var first_name = test_input(req.body.first_name);
@@ -323,29 +420,40 @@ app.post('/signup', function(req, res){
 	var team_number = test_input(req.body.team_number);
 	var team_name = test_input(req.body.team_name);
 	
-	
-	
-	registerUser(username, aPassword, first_name, last_name, email, team_number, team_name,  function(validity, user_id){
-		if(validity.username && validity.password && validity.email){
-			console.log(validity)
-			res.cookie('user_id', user_id, {
-				httpOnly: true,
-				signed: true
-				//add maxAge attribute in milliseconds if wanted
-			})
-			getUserInfo(res, req, function(user_data){
-				console.log(user_data)
-			})
-			res.redirect('/')
-		}
-		else{
-			res.render('signup', validity)
-		}
-		
+	picUpload(req, res, (err) =>{
+					if(err){
+						console.log(err)
+					}
+					else{
+						registerUser(username, aPassword, first_name, last_name, email, team_number, team_name, req.file.path,  function(validity, user_id){
+							if(validity.username && validity.password && validity.email){
+								console.log(validity)
+								res.cookie('user_id', user_id, {
+									httpOnly: true,
+									signed: true
+									//add maxAge attribute in milliseconds if wanted
+								})
+								getUserInfo(res, req, function(user_data){
+									console.log(user_data)
+									res.redirect('/')
+									
+									
+								})
+								
+							}
+							else{
+								res.render('signup', validity)
+							}
+							
+						})
+					}
+					
 	})
+	
+	
 })
 
-function insertUser(username, aPassword, first_name, last_name, email, team_number, team_name, callback){
+function insertUser(username, aPassword, first_name, last_name, email, team_number, team_name, profile_picture, callback){
 	Users.add({
 		username: username,
 		password: trencryption.constantEncrypt(aPassword),
@@ -353,9 +461,62 @@ function insertUser(username, aPassword, first_name, last_name, email, team_numb
 		last_name: last_name,
 		email: email,
 		team_number: team_number,
-		team_name: team_name
+		team_name: team_name,
+		profile_picture: profile_picture
 	}).then(ref => {
   callback(ref.id);
+});
+}
+
+function insertForum_Topic(user_id, category_id, name, description,  callback){
+	Forum_Topics.add({
+		user_id: user_id,
+		category_id: category_id,
+		name: name,
+		description: description,
+		post_count: 0,
+		view_count: 0,
+		last_post_date: new Date(),
+		creation_date: new Date() 
+	}).then(ref => {
+		Forum_Categories.doc(category_id).get().then(function(category){
+			
+				var new_topic_count = category.data().topic_count + 1
+				console.log(new_topic_count) 
+				Forum_Categories.doc(category_id).update({
+				topic_count: new_topic_count
+			}).then(function(doc){
+				callback(ref.id);
+			})
+			})
+  
+});
+}
+
+function insertForum_Post(user_id, topic_id, content,  callback){
+	Forum_Posts.add({
+		user_id: user_id,
+		topic_id: topic_id,
+		content: content,
+		post_date: new Date(),
+	}).then(ref => {
+		Forum_Topics.doc(topic_id).get().then(function(topic){
+			var new_post_count = topic.data().post_count + 1
+			var category_id = topic.data().category_id
+			Forum_Topics.doc(topic_id).update({
+				last_post_date: new Date(),
+				post_count: new_post_count
+			})
+			Forum_Categories.doc(category_id).get().then(function(category){
+				var past_category_post_count = category.data().post_count
+				Forum_Categories.doc(category_id).update({
+				post_count: past_category_post_count + 1
+			}).then(function(doc){
+				callback(ref.id);
+			})
+			})
+		})
+  
 });
 }
 
@@ -399,7 +560,7 @@ function insertOrderWithoutAddress(collection, user_id, email, phone_number, tea
 });
 }
 
-function registerUser(username, aPassword, first_name, last_name,  email, team_number, team_name, callback){
+function registerUser(username, aPassword, first_name, last_name,  email, team_number, team_name, profile_picture, callback){
 	var validity = {username: false, password: false, email: false}
 	
 		var query = Users.where("username", "==", username);
@@ -414,7 +575,7 @@ function registerUser(username, aPassword, first_name, last_name,  email, team_n
 					
 					if(validity.username && validity.password && validity.email){
 						
-						insertUser(username, aPassword, addslashes(first_name), addslashes(last_name), email, team_number, team_name, function(id){
+						insertUser(username, aPassword, addslashes(first_name), addslashes(last_name), email, team_number, team_name, profile_picture, function(id){
 							callback(validity, id)
 						})
 						
@@ -597,4 +758,149 @@ function getDocumentsByID(collection, ids, documents, callback){
 	else{
 		callback(documents);
 	}
+}
+
+function getCategoryDocDataList(callback){
+	Forum_Categories.get().then(
+	function(categoryDocs){
+		
+		var moderator_id_list = []
+		var categoryDocDataList = []
+		categoryDocs.forEach(function(categoryDoc){
+			moderator_id_list.push(categoryDoc.data().moderator_id)
+			var docData = categoryDoc.data();
+			docData.id = categoryDoc.id;
+			categoryDocDataList.push(docData)
+		})
+		var emptyDocumentsList = []
+		
+		getDocumentsByID(Users, moderator_id_list, emptyDocumentsList, function(documents){
+			categoryDocDataList.forEach(function(categoryDocData){
+				documents.forEach(function(doc){
+					console.log(doc.id)
+					if(categoryDocData.moderator_id == doc.id){
+						categoryDocData.moderator_name = doc.first_name + " " + doc.last_name 
+					}
+				})
+			})
+			
+			
+			callback(categoryDocDataList)
+		})
+	}
+	)
+}
+function getAllTopicDocDataList(callback){
+	Forum_Topics.get().then(
+	function(topicDocs){
+		
+		var user_id_list = []
+		var topicDocDataList = []
+		topicDocs.forEach(function(topicDoc){
+			user_id_list.push(topicDoc.data().user_id)
+			var docData = topicDoc.data();
+			docData.id = topicDoc.id;
+			topicDocDataList.push(docData)
+		})
+		var emptyDocumentsList = []
+		
+		getDocumentsByID(Users, user_id_list, emptyDocumentsList, function(documents){
+			topicDocDataList.forEach(function(topicDocData){
+				console.log(new Date().getTime())
+				console.log(topicDocData.creation_date)
+				topicDocData.creation_date = "" + Math.round(((new Date()).getTime()-topicDocData.creation_date._seconds*1000)/(1000*60*60*24)) + "d"
+				topicDocData.last_post_date = "" + Math.round(((new Date()).getTime()-topicDocData.last_post_date._seconds*1000)/(1000*60*60*24)) + "d"
+				documents.forEach(function(doc){
+					console.log(doc.id)
+					if(topicDocData.user_id == doc.id){
+						topicDocData.username = doc.username
+					}
+				})
+			})
+			
+			
+			callback(topicDocDataList)
+		})
+	}
+	)
+}
+
+function getTopicByCategoryIdDocDataList(category_id, callback){
+	Forum_Topics.where("category_id", "==", category_id).orderBy('creation_date').get().then(
+	function(topicDocs){
+		
+		var user_id_list = []
+		var topicDocDataList = []
+		topicDocs.forEach(function(topicDoc){
+			user_id_list.push(topicDoc.data().user_id)
+			var docData = topicDoc.data();
+			docData.id = topicDoc.id;
+			topicDocDataList.push(docData)
+		})
+		var emptyDocumentsList = []
+		
+		getDocumentsByID(Users, user_id_list, emptyDocumentsList, function(documents){
+			topicDocDataList.forEach(function(topicDocData){
+				
+				
+				topicDocData.creation_date = "" + Math.round(((new Date()).getTime()-topicDocData.creation_date._seconds*1000)/(1000*60*60*24)) + "d"
+				topicDocData.last_post_date = "" + Math.round(((new Date()).getTime()-topicDocData.last_post_date._seconds*1000)/(1000*60*60*24)) + "d"
+				documents.forEach(function(doc){
+					
+					if(topicDocData.user_id == doc.id){
+						topicDocData.username = doc.username
+					}
+				})
+			})
+			
+			
+			callback(topicDocDataList)
+		})
+	}
+	)
+}
+
+
+function getPostByTopicIdDocDataList(topic_id, callback){
+	Forum_Posts.where("topic_id", "==", topic_id).orderBy('post_date').get().then(
+	function(postDocs){
+		
+		var user_id_list = []
+		var postDocDataList = []
+		postDocs.forEach(function(postDoc){
+			user_id_list.push(postDoc.data().user_id)
+			var docData = postDoc.data();
+			docData.id = postDoc.id;
+			postDocDataList.push(docData)
+		})
+		var emptyDocumentsList = []
+		console.log(user_id_list)
+		getDocumentsByID(Users, user_id_list, emptyDocumentsList, function(documents){
+			
+			postDocDataList.forEach(function(postDocData){
+				
+				
+				if(postDocData.user_id == "Guest"){
+					postDocData.username = "Guest"
+					postDocData.profile_picture = "/uploads/Guest.jpg"
+				}
+				postDocData.post_date = (new Date(postDocData.post_date._seconds*1000)).toString()
+				console.log(documents)
+				documents.forEach(function(doc){
+					console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+					console.log("USERIDDDDDDDDDDDD")
+					console.log(postDocData.user_id)
+					console.log(doc.id)
+					if(postDocData.user_id == doc.id){
+						postDocData.username = doc.username
+						postDocData.profile_picture = doc.profile_picture
+					}
+				})
+			})
+			
+			
+			callback(postDocDataList)
+		})
+	}
+	)
 }
