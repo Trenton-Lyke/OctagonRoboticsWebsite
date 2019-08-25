@@ -431,13 +431,13 @@ app.post('/submitLindblomOrder', multer.array("files"), function(req, res){
 	
 	var design_file = req.files[0];
 	var additional_file = req.files[1];
-	console.log(design_file)
+	
 	uploadFile(design_file).then(function (design_file_url){
 		uploadFile(additional_file).then(function (additional_file_url){
 			if(delivery_type != "pickup"){
 				var address = ""+req.body.street_address+", "+req.body.city+", "+req.body.state+", "+req.body.zip_code;
 				insertOrderWithAddress(Lindblom_Orders, user_id, email, phone_number, team_number, design_file_url, additional_file_url, message, material, finish, order_date, order_status, delivery_type, address, function (id){
-					console.log(id)
+					
 					emailOrderWithAddress(toEmailLindblom, email, phone_number, team_number, design_file_url, additional_file_url, message, material, finish, order_date, delivery_type, address, id, function(responseInfo){
 						res.redirect("/thankyou")
 					})
@@ -445,7 +445,7 @@ app.post('/submitLindblomOrder', multer.array("files"), function(req, res){
 			}
 			else{
 				insertOrderWithoutAddress(Lindblom_Orders, user_id, email, phone_number, team_number, design_file_url, additional_file_url, message, material, finish, order_date, order_status, delivery_type, function(id){
-					console.log(id)
+					
 					emailOrderWithoutAddress(toEmailLindblom, email, phone_number, team_number, design_file_url, additional_file_url, message, material, finish, order_date, delivery_type, id, function(responseInfo){
 						res.redirect("/thankyou")
 					})
@@ -465,7 +465,7 @@ app.post('/validateSignup', function(req, res){
 	
 	validateSignup(username, aPassword, email, function(validity){
 		
-		console.log(validity)
+		
 		res.send(validity)
 		
 	})
@@ -479,7 +479,7 @@ app.post('/validateLogin', function(req, res){
 	
 	validateLogin(username, aPassword, function(validity){
 		
-		console.log(validity)
+		
 		res.send(validity)
 		
 	})
@@ -508,13 +508,13 @@ app.post('/submit3DPrinterOrder', multer.array("files"), function(req, res){
 	
 	var design_file = req.files[0];
 	var additional_file = req.files[1];
-	console.log(design_file)
+	
 	uploadFile(design_file).then(function (design_file_url){
 		uploadFile(additional_file).then(function (additional_file_url){
 			if(delivery_type != "pickup"){
 				var address = ""+req.body.street_address+", "+req.body.city+", "+req.body.state+", "+req.body.zip_code;
 				insertOrderWithAddress(ThreeDPrinter_Orders, user_id, email, phone_number, team_number, design_file_url, additional_file_url, message, material, finish, order_date, order_status, delivery_type, address, function (id){
-					console.log(id)
+					
 					emailOrderWithAddress(toEmail3DPrinter, email, phone_number, team_number, design_file_url, additional_file_url, message, material, finish, order_date, delivery_type, address, id, function(responseInfo){
 						res.redirect("/thankyou")
 					})
@@ -522,7 +522,7 @@ app.post('/submit3DPrinterOrder', multer.array("files"), function(req, res){
 			}
 			else{
 				insertOrderWithoutAddress(ThreeDPrinter_Orders, user_id, email, phone_number, team_number, design_file_url, additional_file_url, message, material, finish, order_date, order_status, delivery_type, function(id){
-					console.log(id)
+					
 					emailOrderWithoutAddress(toEmail3DPrinter, email, phone_number, team_number, design_file_url, additional_file_url, message, material, finish, order_date, delivery_type, id, function(responseInfo){
 						res.redirect("/thankyou")
 					})
@@ -574,14 +574,14 @@ app.post('/login', function(req, res){
 	query.get().then(function(resultsOfQuery){
 		if(resultsOfQuery.size > 0){
 			resultsOfQuery.forEach(function(doc){
-				console.log(doc.data())
+				
 				res.cookie('user_id', doc.id, {
 					httpOnly: true,
 					signed: true
 					//add maxAge attribute in milliseconds if wanted
 				})
 				getUserInfo(res, req, function(user_data){
-				console.log(user_data)
+				
 			})
 			})
 			//Redirect to your Dashboard Later
@@ -607,21 +607,21 @@ app.post('/loginForum', function(req, res){
 	query.get().then(function(resultsOfQuery){
 		if(resultsOfQuery.size > 0){
 			resultsOfQuery.forEach(function(doc){
-				console.log(doc.data())
+				
 				res.cookie('user_id', doc.id, {
 					httpOnly: true,
 					signed: true
 					//add maxAge attribute in milliseconds if wanted
 				})
 				getUserInfo(res, req, function(user_data){
-				console.log(user_data)
+				
 			})
 			})
 			//Redirect to your Dashboard Later
 			res.redirect('/')
 		}
 		else{
-			console.log("hi")
+			
 			if(req.query && req.query.page && req.query.id){
 				
 				res.redirect('/'+req.query.page+"?id=" + req.query.id+"&uop=n")
@@ -656,14 +656,14 @@ app.post('/signup', picUpload, function(req, res){
 					else{
 						registerUser(username, aPassword, first_name, last_name, email, team_number, team_name, req.file.path,  function(validity, user_id){
 							if(validity.username && validity.password && validity.email){
-								console.log(validity)
+								
 								res.cookie('user_id', user_id, {
 									httpOnly: true,
 									signed: true
 									//add maxAge attribute in milliseconds if wanted
 								})
 								getUserInfo(res, req, function(user_data){
-									console.log(user_data)
+									
 									res.redirect('/')
 									
 									
@@ -709,7 +709,7 @@ function insertForum_Topic(user_id, category_id, name, description,  callback){
 		Forum_Categories.doc(category_id).get().then(function(category){
 			
 				var new_topic_count = category.data().topic_count + 1
-				console.log(new_topic_count) 
+				 
 				Forum_Categories.doc(category_id).update({
 				topic_count: new_topic_count
 			}).then(function(doc){
@@ -901,7 +901,7 @@ function getUserInfo(res, req, callback){
 				user_data.email = revert_input(user_data.email)
 				user_data.team_number = revert_input(user_data.team_number)
 				user_data.team_name = revert_input(user_data.team_name)
-				console.log(user_data.team_name)
+				
 				user_data.id = user_id
 				callback(user_data)		
 			} else {
@@ -951,8 +951,7 @@ function getDocumentsByFeature(collection, feature_title, features, documents, c
 		collection.where(feature_title,'==',features[0]).get().then(function(resultsOfQuery){
 			if(resultsOfQuery.size > 0){
 			resultsOfQuery.forEach(function(doc){
-				console.log('documents')
-				console.log(doc.data())
+				
 				
 					var docData = doc.data()
 					
@@ -974,7 +973,7 @@ function getDocumentsByID(collection, ids, documents, callback){
 			var docData = doc.data()
 			if(docData){
 			
-			console.log(docData)
+			
 			docData.id = ids[0];
 			documents.push(docData)
 		}
@@ -1004,7 +1003,7 @@ function getCategoryDocDataList(callback){
 		getDocumentsByID(Users, moderator_id_list, emptyDocumentsList, function(documents){
 			categoryDocDataList.forEach(function(categoryDocData){
 				documents.forEach(function(doc){
-					console.log(doc.id)
+					
 					if(categoryDocData.moderator_id == doc.id){
 						categoryDocData.moderator_name = doc.first_name + " " + doc.last_name 
 					}
@@ -1036,12 +1035,11 @@ function getAllTopicDocDataList(callback){
 				if(topicDocData.user_id == "Guest"){
 					topicDocData.username = "Guest"
 				}
-				console.log(new Date().getTime())
-				console.log(topicDocData.creation_date)
+				
 				topicDocData.creation_date = "" + Math.round(((new Date()).getTime()-topicDocData.creation_date._seconds*1000)/(1000*60*60*24)) + "d"
 				topicDocData.last_post_date = "" + Math.round(((new Date()).getTime()-topicDocData.last_post_date._seconds*1000)/(1000*60*60*24)) + "d"
 				documents.forEach(function(doc){
-					console.log(doc.id)
+					
 					if(topicDocData.user_id == doc.id){
 						topicDocData.username = doc.username
 					}
@@ -1133,7 +1131,7 @@ function getPostByTopicIdDocDataList(topic_id, callback){
 			postDocDataList.push(docData)
 		})
 		var emptyDocumentsList = []
-		console.log(user_id_list)
+		
 		getDocumentsByID(Users, user_id_list, emptyDocumentsList, function(documents){
 			
 			postDocDataList.forEach(function(postDocData){
@@ -1144,12 +1142,9 @@ function getPostByTopicIdDocDataList(topic_id, callback){
 					postDocData.profile_picture = "/uploads/Guest.jpg"
 				}
 				postDocData.post_date = (new Date(postDocData.post_date._seconds*1000)).toString()
-				console.log(documents)
+				
 				documents.forEach(function(doc){
-					console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
-					console.log("USERIDDDDDDDDDDDD")
-					console.log(postDocData.user_id)
-					console.log(doc.id)
+					
 					if(postDocData.user_id == doc.id){
 						postDocData.username = doc.username
 						postDocData.profile_picture = doc.profile_picture

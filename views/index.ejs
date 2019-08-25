@@ -306,10 +306,10 @@ $.ajax({url: "/validateSignup",type: "POST", data: {username: $("#username").val
 	</div>
 	<div class = "row justify-content-center">
 		<div id = "signup" class = "col-md-3 button">
-			<a href = "/signup"  class = "stretched-link btn btn-lg">SIGN UP</a>
+			<a data-toggle="modal" data-target="#signup"  class = "stretched-link btn btn-lg">SIGN UP</a>
 		</div>
 		<div id = "login" class = "col-md-3 button">
-			<a href = "/login" class = "stretched-link btn btn-lg">LOG IN</a>
+			<a data-toggle="modal" data-target="#login" class = "stretched-link btn btn-lg">LOG IN</a>
 		</div>
 	</div>
 </div>
